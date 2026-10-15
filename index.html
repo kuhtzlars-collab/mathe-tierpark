@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2A975A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tierpark">
+<title>Mathe-Tierpark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Layout: eine zentrierte Tablet-Spalte; jeder Bildschirm stapelt Begleiter-Tier, Aufgabe und große Tasten für den Daumen */
+:root{
+  --bg:#E8F4EC; --surface:#FFFFFF; --surface-2:#F2F9F4; --ink:#16382A; --muted:#527565; --line:#C9E0D2;
+  --sun:#FFB81C; --sun-ink:#4D3400; --leaf:#2A975A; --leaf-ink:#FFFFFF;
+  --sky:#2F86C8; --plum:#8456C4; --clay:#D9603A;
+  --soft-right:#D8F2E2; --soft-wrong:#FFE6D8;
+  --shadow:0 4px 0 rgba(22,56,42,.13);
+  --font-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --font-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F2119; --surface:#1A3227; --surface-2:#152B21; --ink:#E6F4EB; --muted:#9BBCAB; --line:#2B4A3B;
+    --sun:#FFC845; --sun-ink:#3A2700; --leaf:#3BB870; --leaf-ink:#05170D;
+    --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F;
+    --soft-right:#1C4530; --soft-wrong:#4A2B1D; --shadow:0 4px 0 rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F2119; --surface:#1A3227; --surface-2:#152B21; --ink:#E6F4EB; --muted:#9BBCAB; --line:#2B4A3B;
+  --sun:#FFC845; --sun-ink:#3A2700; --leaf:#3BB870; --leaf-ink:#05170D;
+  --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F;
+  --soft-right:#1C4530; --soft-wrong:#4A2B1D; --shadow:0 4px 0 rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:18px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+#app{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:0 40px}
+h1,h2,h3{font-family:var(--font-display);line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.8rem,5vw,2.4rem);font-weight:800}
+h2{font-size:1.6rem;font-weight:800}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.muted{color:var(--muted)}
+
+.area-minus{--area:var(--sky)}
+.area-mal{--area:var(--leaf)}
+.area-teil{--area:var(--plum)}
+
+/* Kopfzeile */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:12px;padding-block:12px;background:var(--bg)}
+.brand{font-family:var(--font-display);font-weight:800;font-size:1.45rem;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:48px;height:48px;border-radius:16px;background:var(--surface);border:2px solid var(--line);box-shadow:var(--shadow);font-size:1.4rem;display:grid;place-items:center;flex:none}
+.iconbtn:active{transform:translateY(2px);box-shadow:none}
+.stars{display:flex;align-items:center;gap:6px;background:var(--sun);color:var(--sun-ink);font-family:var(--font-display);font-weight:800;font-size:1.35rem;padding:4px 16px;border-radius:999px;box-shadow:var(--shadow);font-variant-numeric:tabular-nums;flex:none}
+.stars.bump{animation:bump .5s ease}
+
+.screen{display:flex;flex-direction:column;gap:22px;padding-top:8px}
+
+/* Knöpfe */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:58px;padding:0 26px;border-radius:18px;font-family:var(--font-display);font-weight:700;font-size:1.25rem;background:var(--surface);border:2px solid var(--line);box-shadow:var(--shadow)}
+.btn.primary{background:var(--leaf);color:var(--leaf-ink);border-color:transparent}
+.btn.sun{background:var(--sun);color:var(--sun-ink);border-color:transparent}
+.btn:active{transform:translateY(2px);box-shadow:none}
+.btn[disabled]{opacity:.45;cursor:default}
+.btnrow{display:flex;flex-wrap:wrap;gap:12px}
+
+/* Begleiter mit Sprechblase */
+.buddy{display:flex;align-items:flex-end;gap:14px}
+.face{font-size:clamp(3.6rem,10vw,4.8rem);line-height:1;flex:none;animation:bob 3.2s ease-in-out infinite}
+.face.jump{animation:jump .6s ease}
+.bubble{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:22px 22px 22px 6px;padding:12px 18px;font-weight:800;font-size:1.15rem;min-width:0;box-shadow:var(--shadow)}
+.bubble small{display:block;font-weight:600;color:var(--muted);font-size:.95rem}
+
+/* Einrichtung */
+.pickgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:12px}
+.pick{background:var(--surface);border:3px solid var(--line);border-radius:20px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:var(--shadow)}
+.pick .e{font-size:2.8rem;line-height:1.1}
+.pick .n{font-weight:800;font-size:1rem}
+.pick[aria-checked="true"]{border-color:var(--leaf);background:var(--soft-right)}
+.field{display:flex;flex-direction:column;gap:6px;max-width:420px}
+.field label{font-weight:800}
+.field input{font:inherit;font-size:1.2rem;padding:12px 16px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.fields{display:flex;flex-wrap:wrap;gap:16px}
+.fields .field{flex:1 1 240px}
+
+/* Karte */
+.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.area{background:var(--surface);border:3px solid var(--area);border-radius:26px;padding:18px;text-align:left;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 0 var(--area)}
+.area:active{transform:translateY(4px);box-shadow:0 2px 0 var(--area)}
+.area .top{display:flex;align-items:center;gap:12px}
+.area .icon{font-size:2.8rem;width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:var(--surface-2);flex:none}
+.area h2{font-size:1.5rem}
+.area .what{color:var(--muted);font-weight:700}
+.level{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.95rem}
+.ldots{display:flex;gap:5px}
+.ldots i{width:14px;height:14px;border-radius:50%;background:var(--line)}
+.ldots i.on{background:var(--area)}
+.level .lname{color:var(--muted);font-weight:700}
+.homefoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.linkbtn{font-weight:800;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:10px 4px}
+
+/* Aufgabe */
+.quizhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--area)}
+.dots{display:flex;gap:8px}
+.dot{width:16px;height:16px;border-radius:50%;background:var(--line);transition:transform .2s}
+.dot.cur{background:var(--area);transform:scale(1.3)}
+.dot.ok{background:var(--leaf)}
+.dot.half{background:var(--sun)}
+.dot.no{background:var(--clay)}
+.quizbody{display:grid;gap:20px}
+@media (min-width:860px){.quizbody{grid-template-columns:1fr 340px;align-items:start}}
+.taskcol{display:flex;flex-direction:column;gap:16px;min-width:0}
+.task{position:relative;background:var(--surface);border:3px solid var(--area);border-radius:28px;padding:28px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 6px 0 var(--area)}
+.eq{font-family:var(--font-display);font-weight:800;font-size:clamp(2.5rem,9vw,4.2rem);line-height:1.1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.3em;font-variant-numeric:tabular-nums}
+.ansbox{display:inline-block;min-width:2.4ch;padding:0 .2em;text-align:center;border-bottom:5px solid var(--area);color:var(--area);border-radius:8px 8px 0 0}
+.ans-right{background:var(--soft-right);color:var(--leaf);border-color:var(--leaf)}
+.ans-wrong{background:var(--soft-wrong);animation:shake .4s}
+.ans-reveal{color:var(--clay);border-color:var(--clay)}
+.stack{display:grid;grid-template-columns:repeat(4,.72em);font-family:var(--font-display);font-weight:800;font-size:clamp(2.6rem,9vw,4.2rem);line-height:1.12;font-variant-numeric:tabular-nums}
+.stack span{text-align:center}
+.stack .rule{grid-column:1/-1;height:5px;border-radius:3px;background:var(--ink);margin:4px 0}
+.stack .a{color:var(--area);border-radius:8px}
+.stack.ans-right .a{color:var(--leaf)}
+.stack.ans-reveal .a{color:var(--clay)}
+.stack.ans-wrong{animation:shake .4s}
+.taskbtns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:46px;padding:0 16px;border-radius:999px;background:var(--surface-2);border:2px solid var(--line);font-weight:800}
+.hint{background:var(--surface-2);border:2px dashed var(--area);border-radius:20px;padding:14px 18px;display:flex;flex-direction:column;gap:6px}
+.hint .t{font-weight:800}
+.hint .step{font-family:var(--font-display);font-weight:700;font-size:1.45rem;font-variant-numeric:tabular-nums}
+.plus{position:absolute;right:18px;top:10px;background:var(--sun);color:var(--sun-ink);font-family:var(--font-display);font-weight:800;font-size:1.3rem;padding:2px 12px;border-radius:999px;animation:rise 1.1s ease forwards;pointer-events:none}
+
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.key{min-height:70px;border-radius:20px;background:var(--surface);border:2px solid var(--line);box-shadow:var(--shadow);font-family:var(--font-display);font-weight:800;font-size:2.1rem}
+.key:active{transform:translateY(3px);box-shadow:none}
+.key.del{background:var(--surface-2);font-size:1.6rem}
+.key.ok{background:var(--leaf);color:var(--leaf-ink);border-color:transparent;font-size:1.5rem}
+
+/* Ergebnis */
+.done{align-items:center;text-align:center}
+.done .big{font-size:5.5rem;line-height:1}
+.resrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.res{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff}
+.res.ok{background:var(--leaf);color:var(--leaf-ink)}
+.res.half{background:var(--sun);color:var(--sun-ink)}
+.res.no{background:var(--clay);color:#fff}
+.earned{font-family:var(--font-display);font-weight:800;font-size:2rem;background:var(--sun);color:var(--sun-ink);padding:4px 22px;border-radius:999px}
+.done .btnrow{justify-content:center}
+
+/* Tierpark */
+.factcard{display:flex;gap:16px;align-items:center;background:var(--surface);border:3px solid var(--sun);border-radius:24px;padding:16px 18px;box-shadow:0 6px 0 var(--sun)}
+.factcard .e{font-size:4rem;line-height:1;flex:none}
+.factcard .txt{display:flex;flex-direction:column;gap:6px;min-width:0}
+.factcard .lbl{font-size:.85rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.parkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:12px}
+.animal{background:var(--surface);border:2px solid var(--line);border-radius:20px;padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:var(--shadow)}
+.animal .e{font-size:3rem;line-height:1.1}
+.animal .n{font-weight:800;font-size:.98rem}
+.animal.locked .e{filter:grayscale(1);opacity:.3}
+.animal .price{font-family:var(--font-display);font-weight:800;font-size:1rem;padding:0 10px;border-radius:999px;background:var(--surface-2);border:2px solid var(--line)}
+.animal.afford{border-color:var(--sun)}
+.animal.afford .price{background:var(--sun);color:var(--sun-ink);border-color:transparent}
+.animal.buddy{border-color:var(--leaf);background:var(--soft-right)}
+.animal:active{transform:translateY(2px);box-shadow:none}
+
+/* Eltern */
+.ptable{display:grid;gap:14px}
+.prow{background:var(--surface);border:2px solid var(--line);border-left:8px solid var(--area);border-radius:18px;padding:16px;display:grid;gap:10px}
+.prow .head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{min-height:42px;padding:0 14px;border-radius:12px;border:2px solid var(--line);background:var(--surface-2);font-weight:800;font-size:.95rem}
+.seg button[aria-pressed="true"]{background:var(--area);color:var(--surface);border-color:transparent}
+.prow ul{margin:0;padding-left:20px;color:var(--muted);font-variant-numeric:tabular-nums}
+.note{background:var(--surface-2);border-radius:16px;padding:14px 16px;font-weight:600;color:var(--muted)}
+.confirm{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--soft-wrong);border-radius:16px;padding:12px 14px;font-weight:800}
+
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:20;width:100%;height:100%}
+
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes jump{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-22px) scale(1.12) rotate(-6deg)}100%{transform:translateY(0) scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@keyframes bump{50%{transform:scale(1.2)}}
+@keyframes rise{0%{opacity:0;transform:translateY(10px)}20%{opacity:1}100%{opacity:0;transform:translateY(-40px)}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div id="app">
+  <header class="topbar">
+    <button id="homeBtn" class="iconbtn" aria-label="Zur Karte" hidden>🏠</button>
+    <div class="brand">Mathe-Tierpark</div>
+    <button id="soundBtn" class="iconbtn" aria-label="Töne an oder aus">🔊</button>
+    <div class="stars" aria-label="Deine Sterne">⭐ <span id="starNum">0</span></div>
+  </header>
+
+  <main>
+    <!-- Einrichtung -->
+    <section id="scrSetup" class="screen" hidden>
+      <div class="buddy">
+        <div class="face" id="setupFace">🦊</div>
+        <div class="bubble">Hallo! Such dir ein Tier aus.<small>Es begleitet dich beim Rechnen.</small></div>
+      </div>
+      <div class="pickgrid" id="buddyPick" role="radiogroup" aria-label="Begleiter-Tier"></div>
+      <div class="fields">
+        <div class="field">
+          <label for="kidName">Wie heißt du?</label>
+          <input id="kidName" autocomplete="off" placeholder="Dein Name" maxlength="20">
+        </div>
+        <div class="field">
+          <label for="buddyName">Wie soll dein Tier heißen?</label>
+          <input id="buddyName" autocomplete="off" value="Flocke" maxlength="20">
+        </div>
+      </div>
+      <div><button class="btn primary" id="setupGo">Los geht’s!</button></div>
+    </section>
+
+    <!-- Karte -->
+    <section id="scrHome" class="screen" hidden>
+      <div class="buddy">
+        <div class="face" id="homeFace">🦊</div>
+        <div class="bubble" id="homeBubble"></div>
+      </div>
+      <div class="areas" id="areaList"></div>
+      <div class="homefoot">
+        <button class="btn sun" id="parkBtn"></button>
+        <button class="linkbtn" id="parentsBtn">Für Eltern</button>
+      </div>
+    </section>
+
+    <!-- Aufgabe -->
+    <section id="scrQuiz" class="screen" hidden>
+      <div class="quizhead">
+        <div class="tag" id="quizTag"></div>
+        <div class="dots" id="dots" aria-label="Fortschritt"></div>
+      </div>
+      <div class="quizbody">
+        <div class="taskcol">
+          <div class="buddy">
+            <div class="face" id="quizFace">🦊</div>
+            <div class="bubble" id="quizBubble" aria-live="polite"></div>
+          </div>
+          <div class="task" id="taskCard">
+            <div id="taskView"></div>
+            <div class="taskbtns">
+              <button class="chip" id="readBtn">🔊 Vorlesen</button>
+              <button class="chip" id="hintBtn">💡 Tipp</button>
+            </div>
+          </div>
+          <div class="hint" id="hintBox" hidden></div>
+        </div>
+        <div class="keypad" id="keypad"></div>
+      </div>
+    </section>
+
+    <!-- Rundenende -->
+    <section id="scrDone" class="screen done" hidden>
+      <div class="big" id="doneFace">🦊</div>
+      <h1 id="doneTitle"></h1>
+      <p class="muted" id="doneText"></p>
+      <div class="resrow" id="doneRes"></div>
+      <div class="earned" id="doneStars"></div>
+      <p id="doneLevel" hidden></p>
+      <div class="btnrow">
+        <button class="btn primary" id="againBtn">Nochmal spielen</button>
+        <button class="btn sun" id="toParkBtn">Zum Tierpark</button>
+        <button class="btn" id="toMapBtn">Zur Karte</button>
+      </div>
+    </section>
+
+    <!-- Tierpark -->
+    <section id="scrPark" class="screen" hidden>
+      <div>
+        <h1>Mein Tierpark</h1>
+        <p class="muted">Tausche deine Sterne gegen neue Tiere. Tippe auf ein Tier, um etwas über es zu erfahren.</p>
+      </div>
+      <div class="factcard" id="factCard"></div>
+      <div class="parkgrid" id="parkGrid"></div>
+    </section>
+
+    <!-- Eltern -->
+    <section id="scrParents" class="screen" hidden>
+      <div>
+        <h1>Für Eltern</h1>
+        <p class="muted">Die App passt die Stufe selbst an: 5 richtige Antworten hintereinander führen eine Stufe höher, 2 verpasste Aufgaben hintereinander eine Stufe zurück. Hier können Sie die Stufe auch selbst setzen.</p>
+      </div>
+      <div class="ptable" id="pTable"></div>
+      <p class="note">Alle Daten bleiben nur in diesem Browser auf diesem Gerät. Es gibt kein Konto und nichts wird ins Internet geschickt.</p>
+      <div id="resetArea"><button class="btn" id="resetBtn">Fortschritt zurücksetzen</button></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $ = s => document.querySelector(s);
+const KEY = "mathe-tierpark-v1";
+const ROUND = 8;
+const rnd = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+
+/* ---------- Tiere ---------- */
+const ANIMALS = [
+  {id:"hase",  e:"🐰", n:"Hase",    p:6,  f:"Ein Feldhase kann bis zu 70 km/h schnell rennen."},
+  {id:"katze", e:"🐱", n:"Katze",   p:6,  f:"Katzen schlafen 12 bis 16 Stunden am Tag."},
+  {id:"hund",  e:"🐶", n:"Hund",    p:8,  f:"Ein erwachsener Hund hat 42 Zähne."},
+  {id:"fuchs", e:"🦊", n:"Fuchs",   p:8,  f:"Ein Rotfuchs wiegt etwa 4 bis 8 kg."},
+  {id:"panda", e:"🐼", n:"Panda",   p:10, f:"Ein Panda frisst jeden Tag mehr als 10 kg Bambus."},
+  {id:"pinguin",e:"🐧",n:"Pinguin", p:10, f:"Kaiserpinguine werden bis zu 120 cm groß."},
+  {id:"hamster",e:"🐹",n:"Hamster", p:12, f:"Ein Hamster hat 16 Zähne, und die wachsen immer weiter."},
+  {id:"igel",  e:"🦔", n:"Igel",    p:14, f:"Ein Igel hat 6000 bis 8000 Stacheln."},
+  {id:"eule",  e:"🦉", n:"Eule",    p:16, f:"Eulen können ihren Kopf um 270 Grad drehen."},
+  {id:"koala", e:"🐨", n:"Koala",   p:18, f:"Koalas schlafen bis zu 20 Stunden am Tag."},
+  {id:"schildkroete",e:"🐢",n:"Schildkröte",p:20,f:"Riesenschildkröten können über 100 Jahre alt werden."},
+  {id:"delfin",e:"🐬", n:"Delfin",  p:24, f:"Ein Großer Tümmler hat bis zu 100 Zähne."},
+  {id:"giraffe",e:"🦒",n:"Giraffe", p:28, f:"Eine Giraffe wird über 5 m groß. Das sind mehr als 500 cm!"},
+  {id:"loewe", e:"🦁", n:"Löwe",    p:32, f:"Das Brüllen eines Löwen hört man bis zu 8 km weit."},
+  {id:"elefant",e:"🐘",n:"Elefant", p:40, f:"Ein Afrikanischer Elefant wiegt bis zu 6000 kg. Das sind 6 Tonnen!"},
+  {id:"einhorn",e:"🦄",n:"Einhorn", p:50, f:"Einhörner gibt es nur in Geschichten. Aber in deinem Tierpark wohnt jetzt eins!"}
+];
+const BUDDIES = ["fuchs","hase","katze","hund","panda","pinguin"];
+const animal = id => ANIMALS.find(a => a.id === id) || ANIMALS[3];
+
+/* ---------- Bereiche ---------- */
+const AREAS = {
+  minus:{name:"Minus-Berg", icon:"🐐", what:"Minus rechnen",   verb:"minus",
+         levels:["Bis 100 mit Zehnerübergang","Über den Hunderter","Dreistellig untereinander"]},
+  mal:  {name:"Mal-Wiese",  icon:"🐄", what:"Mal rechnen",     verb:"mal",
+         levels:["Einmaleins","Mit Zehnerzahlen (40 · 7)","Zweistellig mal einstellig"]},
+  teil: {name:"Teil-Teich", icon:"🦆", what:"Geteilt rechnen", verb:"geteilt",
+         levels:["Einmaleins rückwärts","Mit Zehnerzahlen (280 : 7)","Großes Ergebnis (84 : 4)"]}
+};
+
+/* ---------- Speicher ---------- */
+function freshTopic(){ return {level:1, streak:0, miss:0, right:0, total:0, recent:[]}; }
+function defaults(){
+  return {setup:false, kid:"", buddy:"fuchs", buddyName:"Flocke", stars:0, owned:[], sound:true,
+          topics:{minus:freshTopic(), mal:freshTopic(), teil:freshTopic()}};
+}
+function load(){
+  const d = defaults();
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw){
+      const p = JSON.parse(raw);
+      Object.assign(d, p);
+      d.topics = Object.assign(defaults().topics, p.topics || {});
+      for(const k in d.topics) d.topics[k] = Object.assign(freshTopic(), d.topics[k]);
+    }
+  }catch(e){}
+  return d;
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+let S = load();
+
+/* ---------- Aufgaben ---------- */
+function task(a, op, b, answer, hint, steps, stacked){
+  const text = `${a} ${op} ${b}`;
+  const word = op === "−" ? "minus" : op === "·" ? "mal" : "geteilt durch";
+  return {a, b, op, text, answer, hint, steps, stacked:!!stacked, speak:`Wie viel ist ${a} ${word} ${b}?`};
+}
+const tens = n => Math.floor(n/10)%10;
+
+function genMinus(L){
+  let a, b;
+  if(L === 1){
+    do{ a = rnd(31,99); b = rnd(12,a-1); } while(b%10 <= a%10);
+    const t = b - b%10, o = b%10;
+    return task(a,"−",b,a-b,
+      [`Zerlege ${b} in ${t} und ${o}.`, `${a} − ${t} = ?`],
+      [`${a} − ${t} = ${a-t}`, `${a-t} − ${o} = ${a-b}`]);
+  }
+  if(L === 2){
+    do{ a = rnd(12,99)*10; b = rnd(3,a/10-1)*10; } while(tens(b) <= tens(a));
+    const steps = []; let cur = a, Z = b%100; const H = b - Z;
+    if(H){ steps.push(`${cur} − ${H} = ${cur-H}`); cur -= H; }
+    const p = cur%100;
+    if(p > 0 && p < Z){ steps.push(`${cur} − ${p} = ${cur-p}`); cur -= p; Z -= p; }
+    steps.push(`${cur} − ${Z} = ${cur-Z}`);
+    const intro = H ? `Rechne erst die Hunderter weg, dann die Zehner.` : `Springe in Schritten über den Hunderter.`;
+    return task(a,"−",b,a-b,[intro, steps[0].replace(/= \d+$/,"= ?")],steps);
+  }
+  do{ a = rnd(300,999); b = rnd(102,a-40); }
+  while(b%10 === 0 || !(b%10 > a%10 || tens(b) > tens(a)));
+  const H = b - b%100, Z = b%100 - b%10, E = b%10;
+  const steps = []; let cur = a;
+  steps.push(`${cur} − ${H} = ${cur-H}`); cur -= H;
+  if(Z){ steps.push(`${cur} − ${Z} = ${cur-Z}`); cur -= Z; }
+  steps.push(`${cur} − ${E} = ${cur-E}`);
+  return task(a,"−",b,a-b,
+    [`Rechne Stück für Stück: erst ${H}, dann ${Z ? Z + ", dann " : ""}${E} abziehen.`, `${a} − ${H} = ?`],
+    steps, true);
+}
+
+function genMal(L){
+  if(L === 1){
+    const f = pick([3,4,6,7,8,9,6,7,8,9]), g = rnd(2,10);
+    const [x,y] = Math.random() < .5 ? [f,g] : [g,f];
+    let hint, steps;
+    if(f >= 6){
+      hint = [`Nimm die leichte Aufgabe 5 · ${g} = ${5*g}.`, `Dann kommen noch ${f-5} · ${g} dazu.`];
+      steps = [`5 · ${g} = ${5*g}`, `${f-5} · ${g} = ${(f-5)*g}`, `${5*g} + ${(f-5)*g} = ${f*g}`];
+    } else {
+      const seq = Array.from({length:f}, (_,i) => (i+1)*g);
+      hint = [`Zähle in ${g}er-Schritten, ${f}-mal.`, `${seq[0]}, ${seq[1]}, …`];
+      steps = [seq.join(", ")];
+    }
+    return task(x,"·",y,f*g,hint,steps);
+  }
+  if(L === 2){
+    const f = rnd(2,9), g = rnd(3,9), first = Math.random() < .5;
+    const [x,y] = first ? [f*10,g] : [g,f*10];
+    const small = first ? `${f} · ${g}` : `${g} · ${f}`;
+    return task(x,"·",y,f*g*10,
+      [`Rechne erst ohne die Null: ${small} = ?`, `Dann hänge die Null wieder an.`],
+      [`${small} = ${f*g}`, `${x} · ${y} = ${f*g*10}  (zehnmal so viel)`]);
+  }
+  let a; do{ a = rnd(12,49); } while(a%10 === 0);
+  const g = rnd(3,9), T = a - a%10, E = a%10;
+  return task(a,"·",g,a*g,
+    [`Zerlege ${a} in ${T} + ${E}.`, `${T} · ${g} = ?   und   ${E} · ${g} = ?`],
+    [`${T} · ${g} = ${T*g}`, `${E} · ${g} = ${E*g}`, `${T*g} + ${E*g} = ${a*g}`]);
+}
+
+function genTeil(L){
+  if(L === 1){
+    const b = pick([3,4,6,7,8,9,6,7,8,9]), q = rnd(2,10), n = b*q;
+    return task(n,":",b,q,
+      [`Welche Zahl mal ${b} ergibt ${n}?`, `? · ${b} = ${n}`],
+      [`${q} · ${b} = ${n}`, `also ${n} : ${b} = ${q}`]);
+  }
+  if(L === 2){
+    const b = rnd(3,9), q = rnd(2,9)*10, n = b*q;
+    return task(n,":",b,q,
+      [`Rechne erst ohne die Null: ${n/10} : ${b} = ?`, `Dann hänge die Null wieder an.`],
+      [`${n/10} : ${b} = ${q/10}`, `${n} : ${b} = ${q}  (zehnmal so viel)`]);
+  }
+  let b, q; do{ b = rnd(2,6); q = rnd(11,29); } while(q%10 === 0 || b*q > 150);
+  const T = q - q%10, U = q%10, n = b*q;
+  return task(n,":",b,q,
+    [`Zerlege ${n} in ${b*T} + ${b*U}.`, `${b*T} : ${b} = ?   und   ${b*U} : ${b} = ?`],
+    [`${b*T} : ${b} = ${T}`, `${b*U} : ${b} = ${U}`, `${T} + ${U} = ${q}`]);
+}
+const GEN = {minus:genMinus, mal:genMal, teil:genTeil};
+function gen(area, level){
+  const L = (level > 1 && Math.random() < .25) ? level-1 : level;   // ab und zu Wiederholung
+  return GEN[area](L);
+}
+
+/* ---------- Töne & Vorlesen ---------- */
+let actx = null;
+function tone(freqs, dur, type){
+  if(!S.sound) return;
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = actx.currentTime;
+    freqs.forEach((f,i) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || "sine"; o.frequency.value = f;
+      const s = t0 + i*dur;
+      g.gain.setValueAtTime(0.0001, s);
+      g.gain.exponentialRampToValueAtTime(0.16, s+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, s+dur);
+      o.connect(g).connect(actx.destination);
+      o.start(s); o.stop(s+dur+0.03);
+    });
+  }catch(e){}
+}
+const sndRight = () => tone([660,880],.12);
+const sndWrong = () => tone([330,262],.14,"triangle");
+const sndParty = () => tone([523,659,784,1047],.11);
+
+const canSpeak = "speechSynthesis" in window;
+function say(text){
+  if(!canSpeak) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "de-DE"; u.rate = .9;
+    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith("de"));
+    if(v) u.voice = v;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ---------- Konfetti ---------- */
+const cv = $("#confetti"), cx = cv.getContext("2d");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function confetti(){
+  if(reduceMotion) return;
+  const cs = getComputedStyle(document.documentElement);
+  const cols = ["--sun","--leaf","--sky","--plum","--clay"].map(v => cs.getPropertyValue(v).trim());
+  cv.width = innerWidth; cv.height = innerHeight;
+  const ps = Array.from({length:130}, () => ({
+    x: Math.random()*cv.width, y: -20 - Math.random()*cv.height*.5,
+    vx: (Math.random()-.5)*3, vy: 2 + Math.random()*4, r: 5 + Math.random()*6,
+    a: Math.random()*6, va: (Math.random()-.5)*.3, c: pick(cols)
+  }));
+  const t0 = performance.now();
+  (function frame(t){
+    cx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.a += p.va;
+      cx.save(); cx.translate(p.x,p.y); cx.rotate(p.a);
+      cx.fillStyle = p.c; cx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2); cx.restore();
+    });
+    if(t - t0 < 2600) requestAnimationFrame(frame); else cx.clearRect(0,0,cv.width,cv.height);
+  })(t0);
+}
+
+/* ---------- Allgemein ---------- */
+function show(id){
+  document.querySelectorAll(".screen").forEach(s => s.hidden = s.id !== id);
+  $("#homeBtn").hidden = (id === "scrHome" || id === "scrSetup");
+  if(canSpeak) speechSynthesis.cancel();
+  window.scrollTo(0,0);
+}
+function updateStars(bump){
+  $("#starNum").textContent = S.stars;
+  if(bump){ const el = $(".stars"); el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); }
+}
+function updateSound(){ $("#soundBtn").textContent = S.sound ? "🔊" : "🔈"; $("#soundBtn").setAttribute("aria-pressed", S.sound); }
+function setFaces(){ const e = animal(S.buddy).e; ["#homeFace","#quizFace","#doneFace","#setupFace"].forEach(s => $(s).textContent = e); }
+function jump(el){ el.classList.remove("jump"); void el.offsetWidth; el.classList.add("jump"); }
+const kidName = () => S.kid ? `, ${S.kid}` : "";
+function el(tag, cls, text){ const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; }
+
+/* ---------- Einrichtung ---------- */
+let chosenBuddy = S.buddy;
+function renderSetup(){
+  const box = $("#buddyPick"); box.innerHTML = "";
+  BUDDIES.forEach(id => {
+    const a = animal(id);
+    const b = el("button","pick"); b.setAttribute("role","radio");
+    b.setAttribute("aria-checked", id === chosenBuddy);
+    b.append(el("span","e",a.e), el("span","n",a.n));
+    b.onclick = () => { chosenBuddy = id; $("#setupFace").textContent = a.e; jump($("#setupFace")); renderSetup(); };
+    box.append(b);
+  });
+  $("#setupFace").textContent = animal(chosenBuddy).e;
+}
+$("#setupGo").onclick = () => {
+  S.kid = $("#kidName").value.trim();
+  S.buddyName = $("#buddyName").value.trim() || animal(chosenBuddy).n;
+  S.buddy = chosenBuddy;
+  if(!S.owned.includes(chosenBuddy)) S.owned.push(chosenBuddy);
+  S.setup = true; save(); setFaces(); renderHome(); show("scrHome");
+};
+
+/* ---------- Karte ---------- */
+function renderHome(){
+  const total = S.topics.minus.total + S.topics.mal.total + S.topics.teil.total;
+  const hb = $("#homeBubble"); hb.textContent = "";
+  hb.append(total === 0 ? `Hallo${kidName()}! Ich bin ${S.buddyName}.` : `Schön, dass du da bist${kidName()}!`);
+  hb.append(el("small",null,"Wohin gehen wir heute?"));
+  const list = $("#areaList"); list.innerHTML = "";
+  Object.entries(AREAS).forEach(([k,A]) => {
+    const T = S.topics[k];
+    const b = el("button","area area-"+k);
+    const top = el("div","top");
+    const tx = el("div"); tx.append(el("h2",null,A.name), el("div","what",A.what));
+    top.append(el("div","icon",A.icon), tx);
+    const lv = el("div","level");
+    const d = el("div","ldots"); for(let i=1;i<=3;i++) d.append(el("i", i <= T.level ? "on" : ""));
+    lv.append(d, el("span",null,`Stufe ${T.level}`), el("span","lname",A.levels[T.level-1]));
+    b.append(top, lv);
+    b.onclick = () => startRound(k);
+    list.append(b);
+  });
+  $("#parkBtn").textContent = `🐾 Mein Tierpark · ${S.owned.length} von ${ANIMALS.length} Tieren`;
+}
+
+/* ---------- Runde ---------- */
+let R = null, input = "";
+function startRound(area){
+  R = {area, i:0, results:[], earned:0, seen:new Set(), ups:0, timer:null};
+  $("#scrQuiz").className = "screen area-" + area;
+  $("#quizTag").textContent = `${AREAS[area].icon} ${AREAS[area].name}`;
+  show("scrQuiz"); nextTask();
+}
+function nextTask(){
+  if(R.i >= ROUND) return finishRound();
+  let t, guard = 0;
+  do{ t = gen(R.area, S.topics[R.area].level); } while(R.seen.has(t.text) && guard++ < 30);
+  R.seen.add(t.text); R.task = t; R.tries = 0; R.phase = "input"; R.hintShown = false; input = "";
+  $("#quizBubble").textContent = R.i === 0 ? `Los geht’s${kidName()}!` : pick(["Was kommt heraus?","Du schaffst das!","Rechne in Ruhe.","Ich bin gespannt!","Weiter so!"]);
+  $("#hintBox").hidden = true;
+  renderDots(); renderTask("plain"); renderKeypad();
+}
+function renderDots(){
+  const d = $("#dots"); d.innerHTML = "";
+  for(let i=0;i<ROUND;i++){
+    const r = R.results[i];
+    d.append(el("span","dot " + (r === "first" ? "ok" : r === "second" ? "half" : r === "miss" ? "no" : i === R.i ? "cur" : "")));
+  }
+}
+function renderTask(state){
+  const t = R.task, v = $("#taskView"); v.innerHTML = "";
+  const shown = state === "reveal" ? String(t.answer) : input;
+  const stateCls = state === "right" ? "ans-right" : state === "wrong" ? "ans-wrong" : state === "reveal" ? "ans-reveal" : "";
+  if(t.stacked){
+    const g = el("div","stack " + stateCls);
+    g.setAttribute("aria-label", t.text + " = " + (shown || "?"));
+    const row = (sign, num, cls) => {
+      g.append(el("span", null, sign));
+      String(num).padStart(3," ").split("").forEach(c => g.append(el("span", cls || null, c.trim())));
+    };
+    row("", t.a); row("−", t.b);
+    g.append(el("span","rule"));
+    const ans = shown ? shown.padStart(3," ") : "  ?";
+    g.append(el("span"));
+    ans.split("").slice(-3).forEach(c => g.append(el("span","a",c.trim())));
+    v.append(g);
+  } else {
+    const e = el("div","eq");
+    e.append(el("span",null,t.text), el("span",null,"="), el("span","ansbox " + stateCls, shown || "?"));
+    v.append(e);
+  }
+}
+function renderKeypad(){
+  const k = $("#keypad"); k.innerHTML = "";
+  if(R.phase === "next"){
+    const b = el("button","key ok","Weiter →"); b.style.gridColumn = "1 / -1";
+    b.onclick = advance; k.append(b); return;
+  }
+  ["1","2","3","4","5","6","7","8","9","del","0","ok"].forEach(c => {
+    const b = el("button", "key" + (c === "del" ? " del" : c === "ok" ? " ok" : ""), c === "del" ? "⌫" : c === "ok" ? "Prüfen" : c);
+    if(c === "del") b.setAttribute("aria-label","Löschen");
+    b.onclick = () => press(c);
+    k.append(b);
+  });
+}
+function press(c){
+  if(!R || R.phase !== "input") { if(R && R.phase === "next" && c === "ok") advance(); return; }
+  if(c === "del") input = input.slice(0,-1);
+  else if(c === "ok") return check();
+  else if(input.length < 4) input = (input === "0" ? "" : input) + c;
+  renderTask("plain");
+}
+function showHint(lines, title){
+  const h = $("#hintBox"); h.innerHTML = "";
+  h.append(el("div","t",title));
+  lines.forEach(l => h.append(el("div","step",l)));
+  h.hidden = false;
+}
+function showPlus(n){
+  const p = el("div","plus",`+${n} ⭐`); $("#taskCard").append(p);
+  setTimeout(() => p.remove(), 1200);
+}
+function check(){
+  if(input === ""){ $("#quizBubble").textContent = "Tippe zuerst deine Antwort ein."; return; }
+  const t = R.task, T = S.topics[R.area], val = parseInt(input,10);
+  if(val === t.answer){
+    const pts = R.tries === 0 ? 2 : 1;
+    S.stars += pts; R.earned += pts; T.right++; T.total++;
+    R.results[R.i] = R.tries === 0 ? "first" : "second";
+    let msg = pick(["Super!","Richtig!","Klasse!","Toll gemacht!","Genau!","Stark!"]) + (Math.random() < .4 ? kidName().replace(", "," ") : "");
+    if(R.tries === 0){
+      T.streak++; T.miss = 0;
+      if(T.streak >= 5 && T.level < 3){
+        T.level++; T.streak = 0; R.ups++; S.stars += 3; R.earned += 3;
+        msg = `Neue Stufe! Du bist jetzt auf Stufe ${T.level}. +3 Extra-Sterne!`;
+        sndParty(); confetti();
+      } else sndRight();
+    } else { T.streak = 0; sndRight(); }
+    $("#quizBubble").textContent = msg;
+    jump($("#quizFace")); showPlus(pts); updateStars(true);
+    R.phase = "next"; save();
+    renderTask("right"); renderDots(); renderKeypad();
+    R.timer = setTimeout(advance, 1400);
+    return;
+  }
+  R.tries++;
+  sndWrong();
+  if(R.tries === 1){
+    $("#quizBubble").textContent = pick(["Fast! Probier’s nochmal.","Knapp daneben. Schau dir den Tipp an.","Noch ein Versuch!"]);
+    renderTask("wrong"); input = "";
+    setTimeout(() => { if(R.phase === "input") renderTask("plain"); }, 450);
+    showHint(t.hint, "💡 Tipp");
+    return;
+  }
+  T.total++; T.streak = 0; T.miss++;
+  if(T.miss >= 2 && T.level > 1){ T.level--; T.miss = 0; }
+  T.recent.unshift({t:t.text, g:val, a:t.answer}); T.recent = T.recent.slice(0,8);
+  R.results[R.i] = "miss";
+  $("#quizBubble").textContent = `Kein Problem! Das Ergebnis ist ${t.answer}. So rechnet man das:`;
+  showHint(t.steps, "So geht’s");
+  R.phase = "next"; save();
+  renderTask("reveal"); renderDots(); renderKeypad();
+}
+function advance(){
+  if(!R || R.phase !== "next") return;
+  clearTimeout(R.timer); R.i++; nextTask();
+}
+function finishRound(){
+  const right = R.results.filter(r => r !== "miss").length;
+  const perfect = R.results.every(r => r === "first");
+  if(perfect){ S.stars += 3; R.earned += 3; }
+  save(); updateStars(true);
+  $("#doneTitle").textContent = perfect ? "Perfekt! Alles beim ersten Mal richtig!" : right >= 6 ? "Super gemacht!" : "Gut geübt!";
+  $("#doneText").textContent = `${right} von ${ROUND} Aufgaben richtig.` + (perfect ? " Dafür gibt es 3 Extra-Sterne." : right < 6 ? " Jede Runde macht dich stärker." : "");
+  const rr = $("#doneRes"); rr.innerHTML = "";
+  R.results.forEach(r => rr.append(el("span","res " + (r === "first" ? "ok" : r === "second" ? "half" : "no"), r === "miss" ? "·" : "✓")));
+  $("#doneStars").textContent = `+${R.earned} ⭐`;
+  const dl = $("#doneLevel");
+  dl.hidden = !R.ups; dl.textContent = R.ups ? `${AREAS[R.area].name}: Du bist jetzt auf Stufe ${S.topics[R.area].level}!` : "";
+  const cheapest = ANIMALS.filter(a => !S.owned.includes(a.id)).sort((a,b) => a.p - b.p)[0];
+  $("#toParkBtn").textContent = cheapest && S.stars >= cheapest.p ? "Neues Tier holen!" : "Zum Tierpark";
+  show("scrDone");
+  if(right >= 6){ confetti(); sndParty(); }
+}
+$("#againBtn").onclick = () => startRound(R.area);
+$("#toParkBtn").onclick = () => { renderPark(); show("scrPark"); };
+$("#toMapBtn").onclick = () => { renderHome(); show("scrHome"); };
+
+/* ---------- Tierpark ---------- */
+let factId = null, factNote = "";
+function renderPark(){
+  if(!factId) factId = S.buddy;
+  const a = animal(factId), owned = S.owned.includes(a.id);
+  const fc = $("#factCard"); fc.innerHTML = "";
+  fc.append(el("div","e",a.e));
+  const tx = el("div","txt");
+  tx.append(el("div","lbl", factNote || (a.id === S.buddy ? `${S.buddyName}, dein Begleiter` : owned ? "Wohnt in deinem Tierpark" : "Noch nicht adoptiert")));
+  tx.append(el("h2",null,a.n));
+  if(owned){
+    tx.append(el("p",null,"Wusstest du? " + a.f));
+    if(a.id !== S.buddy){
+      const b = el("button","chip","Als Begleiter wählen");
+      b.onclick = () => { S.buddy = a.id; S.buddyName = a.n; save(); setFaces(); factNote = "Dein neuer Begleiter"; renderPark(); };
+      const w = el("div"); w.append(b); tx.append(w);
+    }
+  } else {
+    const miss = a.p - S.stars;
+    tx.append(el("p",null, miss > 0 ? `Kostet ${a.p} Sterne. Du hast ${S.stars}. Wie viele fehlen noch? Genau: ${miss}!` : `Kostet ${a.p} Sterne. Tippe nochmal, um es zu adoptieren.`));
+  }
+  fc.append(tx);
+  factNote = "";
+
+  const g = $("#parkGrid"); g.innerHTML = "";
+  ANIMALS.forEach(x => {
+    const own = S.owned.includes(x.id);
+    const b = el("button","animal" + (own ? "" : " locked") + (!own && S.stars >= x.p ? " afford" : "") + (x.id === S.buddy ? " buddy" : ""));
+    b.append(el("span","e",x.e), el("span","n", own ? x.n : "???"));
+    if(!own) b.append(el("span","price",`${x.p} ⭐`));
+    b.setAttribute("aria-label", own ? x.n : `Gesperrtes Tier, kostet ${x.p} Sterne`);
+    b.onclick = () => {
+      if(!own && S.stars >= x.p && factId === x.id){
+        S.stars -= x.p; S.owned.push(x.id); save(); updateStars(true);
+        factNote = "Neu in deinem Tierpark!"; confetti(); sndParty();
+      }
+      factId = x.id; renderPark();
+    };
+    g.append(b);
+  });
+}
+
+/* ---------- Eltern ---------- */
+function renderParents(){
+  const box = $("#pTable"); box.innerHTML = "";
+  Object.entries(AREAS).forEach(([k,A]) => {
+    const T = S.topics[k];
+    const r = el("div","prow area-"+k);
+    const head = el("div","head");
+    head.append(el("h3",null,`${A.icon} ${A.name} · ${A.what}`));
+    const seg = el("div","seg");
+    A.levels.forEach((name,i) => {
+      const b = el("button",null,`Stufe ${i+1}: ${name}`);
+      b.setAttribute("aria-pressed", T.level === i+1);
+      b.onclick = () => { T.level = i+1; T.streak = 0; T.miss = 0; save(); renderParents(); };
+      seg.append(b);
+    });
+    const pct = T.total ? Math.round(T.right/T.total*100) : 0;
+    r.append(head, seg, el("p",null, T.total ? `${T.right} von ${T.total} Aufgaben richtig (${pct} %)` : "Noch keine Aufgaben gerechnet."));
+    if(T.recent.length){
+      r.append(el("p","muted","Zuletzt nicht geschafft:"));
+      const ul = el("ul");
+      T.recent.forEach(m => ul.append(el("li",null,`${m.t} = ${m.a}  (getippt: ${m.g})`)));
+      r.append(ul);
+    }
+    box.append(r);
+  });
+  resetIdle();
+}
+function resetIdle(){
+  const a = $("#resetArea"); a.innerHTML = "";
+  const b = el("button","btn","Fortschritt zurücksetzen");
+  b.onclick = () => {
+    a.innerHTML = "";
+    const c = el("div","confirm"); c.append(el("span",null,"Sterne, Tiere und Stufen wirklich löschen?"));
+    const yes = el("button","btn","Ja, alles löschen"), no = el("button","btn primary","Abbrechen");
+    yes.onclick = () => { S = defaults(); save(); chosenBuddy = S.buddy; updateStars(); setFaces(); renderSetup(); show("scrSetup"); };
+    no.onclick = resetIdle;
+    c.append(yes,no); a.append(c);
+  };
+  a.append(b);
+}
+
+/* ---------- Verdrahtung ---------- */
+$("#homeBtn").onclick = () => { if(R) clearTimeout(R.timer); renderHome(); show("scrHome"); };
+$("#parkBtn").onclick = () => { factId = S.buddy; renderPark(); show("scrPark"); };
+$("#parentsBtn").onclick = () => { renderParents(); show("scrParents"); };
+$("#soundBtn").onclick = () => { S.sound = !S.sound; save(); updateSound(); };
+$("#readBtn").onclick = () => say(R.task.speak);
+$("#hintBtn").onclick = () => { if(R.phase === "input") showHint(R.task.hint, "💡 Tipp"); };
+if(!canSpeak) $("#readBtn").hidden = true;
+
+document.addEventListener("keydown", e => {
+  if($("#scrQuiz").hidden || e.target.tagName === "INPUT") return;
+  if(/^[0-9]$/.test(e.key)) press(e.key);
+  else if(e.key === "Backspace") press("del");
+  else if(e.key === "Enter"){ e.preventDefault(); press("ok"); }
+});
+
+updateStars(); updateSound(); setFaces();
+if(S.setup){ renderHome(); show("scrHome"); }
+else { renderSetup(); show("scrSetup"); }
+})();
+</script>
+</body>
+</html>
