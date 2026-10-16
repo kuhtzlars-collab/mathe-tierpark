@@ -109,6 +109,15 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .ldots i.on{background:var(--area)}
 .level .lname{color:var(--muted);font-weight:700}
 .homefoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.meadow{background:linear-gradient(180deg,var(--surface) 0%,var(--surface) 55%,var(--soft-right) 100%);border:2px solid var(--line);border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.meadowhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.meadowcount{font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--leaf);font-variant-numeric:tabular-nums}
+.meadowbar{height:12px;border-radius:999px;background:var(--surface-2);border:2px solid var(--line);overflow:hidden}
+.meadowbar i{display:block;height:100%;background:var(--leaf);border-radius:999px;transition:width .6s ease}
+.meadowpen{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:flex-end;min-height:64px}
+.critter{font-size:2.9rem;line-height:1;padding:4px;border-radius:16px;animation:bob 3.2s ease-in-out infinite}
+.critter.is-buddy{background:var(--soft-right);box-shadow:inset 0 0 0 2px var(--leaf)}
+.critter.empty{font-size:1.4rem;width:2.3rem;height:2.3rem;display:grid;place-items:center;border:2px dashed var(--line);color:var(--muted);animation:none;font-family:var(--font-display);font-weight:800;padding:0;margin:0 0 6px}
 .linkbtn{font-weight:800;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:10px 4px}
 
 /* Aufgabe */
@@ -245,6 +254,15 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
       <div class="homefoot">
         <button class="btn sun" id="parkBtn"></button>
         <button class="linkbtn" id="parentsBtn">Für Eltern</button>
+      </div>
+      <div class="meadow">
+        <div class="meadowhead">
+          <h2>Meine Tiere</h2>
+          <span class="meadowcount" id="meadowCount"></span>
+        </div>
+        <div class="meadowbar" aria-hidden="true"><i id="meadowFill"></i></div>
+        <div class="meadowpen" id="meadowPen"></div>
+        <p class="muted" id="meadowNext"></p>
       </div>
     </section>
 
@@ -669,6 +687,26 @@ function renderHome(){
     list.append(b);
   });
   $("#parkBtn").textContent = `🐾 Mein Tierpark · ${S.owned.length} von ${ANIMALS.length} Tieren`;
+  renderMeadow();
+}
+// Startseite unten: alle gesammelten Tiere auf einer Wiese, freie Plätze als Fragezeichen
+function renderMeadow(){
+  const owned = ANIMALS.filter(a => S.owned.includes(a.id));
+  $("#meadowCount").textContent = `${owned.length} von ${ANIMALS.length}`;
+  $("#meadowFill").style.width = `${Math.round(owned.length / ANIMALS.length * 100)}%`;
+  const pen = $("#meadowPen"); pen.innerHTML = "";
+  owned.forEach((a,i) => {
+    const b = el("button","critter" + (a.id === S.buddy ? " is-buddy" : ""), a.e);
+    b.style.animationDelay = `${-(i*0.4)}s`;
+    b.setAttribute("aria-label", a.id === S.buddy ? `${a.n}, dein Begleiter ${S.buddyName}` : a.n);
+    b.onclick = () => { factId = a.id; renderPark(); show("scrPark"); };
+    pen.append(b);
+  });
+  for(let i = owned.length; i < ANIMALS.length; i++) pen.append(el("span","critter empty","?"));
+  const next = ANIMALS.filter(a => !S.owned.includes(a.id)).sort((a,b) => a.p - b.p)[0];
+  $("#meadowNext").textContent = !next ? "Du hast alle Tiere gesammelt. Wahnsinn!"
+    : S.stars >= next.p ? `Du hast genug Sterne für ein neues Tier! Schau in deinen Tierpark.`
+    : `Noch ${next.p - S.stars} Sterne bis zum nächsten Tier.`;
 }
 
 /* ---------- Runde ---------- */

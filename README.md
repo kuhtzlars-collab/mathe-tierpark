@@ -16,6 +16,7 @@ Ein Mathe-Lernspiel für die 4. Klasse, gemacht fürs Tablet. Kinder rechnen kur
 - Nach 5 richtigen Antworten hintereinander geht es eine Stufe höher, nach 2 verpassten Aufgaben hintereinander eine zurück.
 - Beim ersten Fehler gibt es einen Tipp, beim zweiten den Rechenweg Schritt für Schritt.
 - Aufgaben können vorgelesen werden.
+- Unten auf der Startseite zeigt „Meine Tiere“ alle gesammelten Tiere mit Fortschrittsbalken und wie viele Sterne bis zum nächsten Tier fehlen.
 - Im Bereich „Für Eltern“ sieht man den Fortschritt und kann die Stufe selbst einstellen.
 - Für Plus und Minus lässt sich dort auch die Darstellung wählen: automatisch (Stufe 3 untereinander), immer hintereinander oder immer untereinander.
 - Untereinander gibt es eine Zeile mit kleinen Kästchen für Merkzahlen (Übertrag), und das Ergebnis wird wie im Heft von rechts nach links eingetragen. Tipps und Rechenweg erklären Plus spaltenweise mit Übertrag und Minus im Ergänzungsverfahren.
