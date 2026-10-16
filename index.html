@@ -409,6 +409,28 @@ function colPlus(a, b){
   };
 }
 
+// Schriftliche Subtraktion im Ergänzungsverfahren: von unten nach oben ergänzen, Übertrag unten
+function colMinus(a, b){
+  const steps = []; let carry = 0;
+  for(let i=0;i<3;i++){
+    if(i > 0 && a < 10**i) break;
+    const x = Math.floor(a/10**i)%10, y = Math.floor(b/10**i)%10, name = PLACES[2-i];
+    const low = y + carry, nc = low > x ? 1 : 0, target = x + 10*nc, d = target - low;
+    let s = `${name}: ` + (carry ? `${y} + ${carry} = ${low}, ` : "") + `${low} + ? = ${target} → ${d}`;
+    if(a < 10**(i+1) && d === 0) s += ", die Null vorne schreibst du nicht";
+    else s += `, schreibe ${d}` + (nc ? ", merke 1" : "");
+    steps.push(s); carry = nc;
+  }
+  steps.push(`Ergebnis: ${a-b}`);
+  const x0 = a%10, y0 = b%10;
+  return {
+    hint: ["Fang rechts bei den Einern an und ergänze von unten nach oben.",
+           `Einer: ${y0} + ? = ${y0 > x0 ? 10 + x0 : x0}`,
+           "Reicht es nicht? Dann ergänze bis zur Zahl mit 1 davor (z. B. bis 13) und schreibe 1 als Merkzahl ins kleine Kästchen eine Spalte weiter links."],
+    steps
+  };
+}
+
 function genPlus(L){
   let a, b;
   if(L === 1){
@@ -664,6 +686,7 @@ function nextTask(){
   const lay = S.topics[R.area].layout;
   if(HAS_LAYOUT.includes(R.area) && lay !== "auto") t.stacked = lay === "stack";
   if(t.stacked && t.op === "+") Object.assign(t, colPlus(t.a, t.b));
+  if(t.stacked && t.op === "−") Object.assign(t, colMinus(t.a, t.b));
   R.seen.add(t.text); R.task = t; R.tries = 0; R.phase = "input"; R.hintShown = false;
   R.help = ["","",""]; resetAnswer();
   $("#quizBubble").textContent = t.stacked ? pick(["Fang rechts bei den Einern an!","Erst die Einer, dann die Zehner, dann die Hunderter.","Von rechts nach links, du schaffst das!"])

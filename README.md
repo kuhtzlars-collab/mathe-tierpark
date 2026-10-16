@@ -18,7 +18,7 @@ Ein Mathe-Lernspiel für die 4. Klasse, gemacht fürs Tablet. Kinder rechnen kur
 - Aufgaben können vorgelesen werden.
 - Im Bereich „Für Eltern“ sieht man den Fortschritt und kann die Stufe selbst einstellen.
 - Für Plus und Minus lässt sich dort auch die Darstellung wählen: automatisch (Stufe 3 untereinander), immer hintereinander oder immer untereinander.
-- Untereinander gibt es eine Zeile mit kleinen Kästchen für Merkzahlen (Übertrag), und das Ergebnis wird wie im Heft von rechts nach links eingetragen.
+- Untereinander gibt es eine Zeile mit kleinen Kästchen für Merkzahlen (Übertrag), und das Ergebnis wird wie im Heft von rechts nach links eingetragen. Tipps und Rechenweg erklären Plus spaltenweise mit Übertrag und Minus im Ergänzungsverfahren.
 
 ## Datenschutz
 
