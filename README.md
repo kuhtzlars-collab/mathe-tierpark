@@ -8,8 +8,8 @@ Ein Mathe-Lernspiel für die 4. Klasse, gemacht fürs Tablet. Kinder rechnen kur
 
 | Bereich | Stufe 1 | Stufe 2 | Stufe 3 |
 |---|---|---|---|
-| 🐿️ Plus-Wald | bis 100 mit Zehnerübergang | über den Hunderter (470 + 260) | dreistellig untereinander (496 + 114) |
-| 🐐 Minus-Berg | bis 100 mit Zehnerübergang | über den Hunderter (730 − 260) | dreistellig untereinander (503 − 388) |
+| 🐿️ Plus-Wald | bis 100 mit Zehnerübergang | über den Hunderter (470 + 260) | dreistellig (496 + 114) |
+| 🐐 Minus-Berg | bis 100 mit Zehnerübergang | über den Hunderter (730 − 260) | dreistellig (503 − 388) |
 | 🐄 Mal-Wiese | Einmaleins | mit Zehnerzahlen (40 · 7) | zweistellig mal einstellig (38 · 7) |
 | 🦆 Teil-Teich | Einmaleins rückwärts | mit Zehnerzahlen (280 : 7) | großes Ergebnis (84 : 4) |
 
@@ -17,6 +17,7 @@ Ein Mathe-Lernspiel für die 4. Klasse, gemacht fürs Tablet. Kinder rechnen kur
 - Beim ersten Fehler gibt es einen Tipp, beim zweiten den Rechenweg Schritt für Schritt.
 - Aufgaben können vorgelesen werden.
 - Im Bereich „Für Eltern“ sieht man den Fortschritt und kann die Stufe selbst einstellen.
+- Für Plus und Minus lässt sich dort auch die Darstellung wählen: automatisch (Stufe 3 untereinander), immer hintereinander oder immer untereinander.
 
 ## Datenschutz
 

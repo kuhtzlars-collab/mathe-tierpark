@@ -339,9 +339,9 @@ const animal = id => ANIMALS.find(a => a.id === id) || ANIMALS[3];
 /* ---------- Bereiche ---------- */
 const AREAS = {
   plus: {name:"Plus-Wald",  icon:"🐿️", what:"Plus rechnen",    verb:"plus",
-         levels:["Bis 100 mit Zehnerübergang","Über den Hunderter","Dreistellig untereinander"]},
+         levels:["Bis 100 mit Zehnerübergang","Über den Hunderter","Dreistellig"]},
   minus:{name:"Minus-Berg", icon:"🐐", what:"Minus rechnen",   verb:"minus",
-         levels:["Bis 100 mit Zehnerübergang","Über den Hunderter","Dreistellig untereinander"]},
+         levels:["Bis 100 mit Zehnerübergang","Über den Hunderter","Dreistellig"]},
   mal:  {name:"Mal-Wiese",  icon:"🐄", what:"Mal rechnen",     verb:"mal",
          levels:["Einmaleins","Mit Zehnerzahlen (40 · 7)","Zweistellig mal einstellig"]},
   teil: {name:"Teil-Teich", icon:"🦆", what:"Geteilt rechnen", verb:"geteilt",
@@ -349,7 +349,9 @@ const AREAS = {
 };
 
 /* ---------- Speicher ---------- */
-function freshTopic(){ return {level:1, streak:0, miss:0, right:0, total:0, recent:[]}; }
+function freshTopic(){ return {level:1, streak:0, miss:0, right:0, total:0, recent:[], layout:"auto"}; }
+const LAYOUTS = [["auto","Automatisch (Stufe 3 untereinander)"],["row","Immer hintereinander"],["stack","Immer untereinander"]];
+const HAS_LAYOUT = ["plus","minus"];
 function defaults(){
   return {setup:false, kid:"", buddy:"fuchs", buddyName:"Flocke", stars:0, owned:[], sound:true,
           topics:{plus:freshTopic(), minus:freshTopic(), mal:freshTopic(), teil:freshTopic()}};
@@ -630,6 +632,8 @@ function nextTask(){
   if(R.i >= ROUND) return finishRound();
   let t, guard = 0;
   do{ t = gen(R.area, S.topics[R.area].level); } while(R.seen.has(t.text) && guard++ < 30);
+  const lay = S.topics[R.area].layout;
+  if(HAS_LAYOUT.includes(R.area) && lay !== "auto") t.stacked = lay === "stack";
   R.seen.add(t.text); R.task = t; R.tries = 0; R.phase = "input"; R.hintShown = false; input = "";
   $("#quizBubble").textContent = R.i === 0 ? `Los geht’s${kidName()}!` : pick(["Was kommt heraus?","Du schaffst das!","Rechne in Ruhe.","Ich bin gespannt!","Weiter so!"]);
   $("#hintBox").hidden = true;
@@ -818,8 +822,20 @@ function renderParents(){
       b.onclick = () => { T.level = i+1; T.streak = 0; T.miss = 0; save(); renderParents(); };
       seg.append(b);
     });
+    r.append(head, seg);
+    if(HAS_LAYOUT.includes(k)){
+      r.append(el("p","muted","Darstellung der Aufgaben:"));
+      const seg2 = el("div","seg");
+      LAYOUTS.forEach(([val,name]) => {
+        const b = el("button",null,name);
+        b.setAttribute("aria-pressed", T.layout === val);
+        b.onclick = () => { T.layout = val; save(); renderParents(); };
+        seg2.append(b);
+      });
+      r.append(seg2);
+    }
     const pct = T.total ? Math.round(T.right/T.total*100) : 0;
-    r.append(head, seg, el("p",null, T.total ? `${T.right} von ${T.total} Aufgaben richtig (${pct} %)` : "Noch keine Aufgaben gerechnet."));
+    r.append(el("p",null, T.total ? `${T.right} von ${T.total} Aufgaben richtig (${pct} %)` : "Noch keine Aufgaben gerechnet."));
     if(T.recent.length){
       r.append(el("p","muted","Zuletzt nicht geschafft:"));
       const ul = el("ul");
