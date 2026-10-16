@@ -16,7 +16,7 @@
 :root{
   --bg:#E8F4EC; --surface:#FFFFFF; --surface-2:#F2F9F4; --ink:#16382A; --muted:#527565; --line:#C9E0D2;
   --sun:#FFB81C; --sun-ink:#4D3400; --leaf:#2A975A; --leaf-ink:#FFFFFF;
-  --sky:#2F86C8; --plum:#8456C4; --clay:#D9603A;
+  --sky:#2F86C8; --plum:#8456C4; --clay:#D9603A; --amber:#C77A00;
   --soft-right:#D8F2E2; --soft-wrong:#FFE6D8;
   --shadow:0 4px 0 rgba(22,56,42,.13);
   --font-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
@@ -26,7 +26,7 @@
   :root:not([data-theme="light"]){
     --bg:#0F2119; --surface:#1A3227; --surface-2:#152B21; --ink:#E6F4EB; --muted:#9BBCAB; --line:#2B4A3B;
     --sun:#FFC845; --sun-ink:#3A2700; --leaf:#3BB870; --leaf-ink:#05170D;
-    --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F;
+    --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F; --amber:#F2B03A;
     --soft-right:#1C4530; --soft-wrong:#4A2B1D; --shadow:0 4px 0 rgba(0,0,0,.35);
     color-scheme:dark;
   }
@@ -34,7 +34,7 @@
 :root[data-theme="dark"]{
   --bg:#0F2119; --surface:#1A3227; --surface-2:#152B21; --ink:#E6F4EB; --muted:#9BBCAB; --line:#2B4A3B;
   --sun:#FFC845; --sun-ink:#3A2700; --leaf:#3BB870; --leaf-ink:#05170D;
-  --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F;
+  --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F; --amber:#F2B03A;
   --soft-right:#1C4530; --soft-wrong:#4A2B1D; --shadow:0 4px 0 rgba(0,0,0,.35);
   color-scheme:dark;
 }
@@ -51,6 +51,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;paddin
 button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
 .muted{color:var(--muted)}
 
+.area-plus{--area:var(--amber)}
 .area-minus{--area:var(--sky)}
 .area-mal{--area:var(--leaf)}
 .area-teil{--area:var(--plum)}
@@ -93,14 +94,16 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 .fields .field{flex:1 1 240px}
 
 /* Karte */
-.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.areas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:560px){.areas{grid-template-columns:1fr}}
 .area{background:var(--surface);border:3px solid var(--area);border-radius:26px;padding:18px;text-align:left;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 0 var(--area)}
 .area:active{transform:translateY(4px);box-shadow:0 2px 0 var(--area)}
 .area .top{display:flex;align-items:center;gap:12px}
 .area .icon{font-size:2.8rem;width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:var(--surface-2);flex:none}
 .area h2{font-size:1.5rem}
 .area .what{color:var(--muted);font-weight:700}
-.level{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.95rem}
+.level{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-weight:800;font-size:.95rem}
+.level > span:first-of-type{white-space:nowrap}
 .ldots{display:flex;gap:5px}
 .ldots i{width:14px;height:14px;border-radius:50%;background:var(--line)}
 .ldots i.on{background:var(--area)}
@@ -335,6 +338,8 @@ const animal = id => ANIMALS.find(a => a.id === id) || ANIMALS[3];
 
 /* ---------- Bereiche ---------- */
 const AREAS = {
+  plus: {name:"Plus-Wald",  icon:"🐿️", what:"Plus rechnen",    verb:"plus",
+         levels:["Bis 100 mit Zehnerübergang","Über den Hunderter","Dreistellig untereinander"]},
   minus:{name:"Minus-Berg", icon:"🐐", what:"Minus rechnen",   verb:"minus",
          levels:["Bis 100 mit Zehnerübergang","Über den Hunderter","Dreistellig untereinander"]},
   mal:  {name:"Mal-Wiese",  icon:"🐄", what:"Mal rechnen",     verb:"mal",
@@ -347,7 +352,7 @@ const AREAS = {
 function freshTopic(){ return {level:1, streak:0, miss:0, right:0, total:0, recent:[]}; }
 function defaults(){
   return {setup:false, kid:"", buddy:"fuchs", buddyName:"Flocke", stars:0, owned:[], sound:true,
-          topics:{minus:freshTopic(), mal:freshTopic(), teil:freshTopic()}};
+          topics:{plus:freshTopic(), minus:freshTopic(), mal:freshTopic(), teil:freshTopic()}};
 }
 function load(){
   const d = defaults();
@@ -368,10 +373,41 @@ let S = load();
 /* ---------- Aufgaben ---------- */
 function task(a, op, b, answer, hint, steps, stacked){
   const text = `${a} ${op} ${b}`;
-  const word = op === "−" ? "minus" : op === "·" ? "mal" : "geteilt durch";
+  const word = op === "+" ? "plus" : op === "−" ? "minus" : op === "·" ? "mal" : "geteilt durch";
   return {a, b, op, text, answer, hint, steps, stacked:!!stacked, speak:`Wie viel ist ${a} ${word} ${b}?`};
 }
 const tens = n => Math.floor(n/10)%10;
+
+function genPlus(L){
+  let a, b;
+  if(L === 1){
+    do{ a = rnd(12,87); b = rnd(12,100-a); } while(a%10 + b%10 < 10);
+    const t = b - b%10, o = b%10;
+    return task(a,"+",b,a+b,
+      [`Zerlege ${b} in ${t} und ${o}.`, `${a} + ${t} = ?`],
+      [`${a} + ${t} = ${a+t}`, `${a+t} + ${o} = ${a+b}`]);
+  }
+  if(L === 2){
+    do{ a = rnd(11,89)*10; b = rnd(3,99-a/10)*10; } while(tens(a) + tens(b) < 10);
+    const steps = []; let cur = a, Z = b%100; const H = b - Z;
+    if(H){ steps.push(`${cur} + ${H} = ${cur+H}`); cur += H; }
+    const p = 100 - cur%100;
+    if(p < Z){ steps.push(`${cur} + ${p} = ${cur+p}`); cur += p; Z -= p; }
+    steps.push(`${cur} + ${Z} = ${cur+Z}`);
+    const intro = H ? `Rechne erst die Hunderter dazu, dann die Zehner.` : `Springe erst bis zum vollen Hunderter.`;
+    return task(a,"+",b,a+b,[intro, steps[0].replace(/= \d+$/,"= ?")],steps);
+  }
+  do{ a = rnd(102,880); b = rnd(102,999-a); }
+  while(b < 102 || b%10 === 0 || !(a%10 + b%10 >= 10 || tens(a) + tens(b) >= 10));
+  const H = b - b%100, Z = b%100 - b%10, E = b%10;
+  const steps = []; let cur = a;
+  steps.push(`${cur} + ${H} = ${cur+H}`); cur += H;
+  if(Z){ steps.push(`${cur} + ${Z} = ${cur+Z}`); cur += Z; }
+  steps.push(`${cur} + ${E} = ${cur+E}`);
+  return task(a,"+",b,a+b,
+    [`Rechne Stück für Stück: erst ${H}, dann ${Z ? Z + ", dann " : ""}${E} dazu.`, `${a} + ${H} = ?`],
+    steps, true);
+}
 
 function genMinus(L){
   let a, b;
@@ -453,7 +489,7 @@ function genTeil(L){
     [`Zerlege ${n} in ${b*T} + ${b*U}.`, `${b*T} : ${b} = ?   und   ${b*U} : ${b} = ?`],
     [`${b*T} : ${b} = ${T}`, `${b*U} : ${b} = ${U}`, `${T} + ${U} = ${q}`]);
 }
-const GEN = {minus:genMinus, mal:genMal, teil:genTeil};
+const GEN = {plus:genPlus, minus:genMinus, mal:genMal, teil:genTeil};
 function gen(area, level){
   const L = (level > 1 && Math.random() < .25) ? level-1 : level;   // ab und zu Wiederholung
   return GEN[area](L);
@@ -561,7 +597,7 @@ $("#setupGo").onclick = () => {
 
 /* ---------- Karte ---------- */
 function renderHome(){
-  const total = S.topics.minus.total + S.topics.mal.total + S.topics.teil.total;
+  const total = Object.values(S.topics).reduce((s,T) => s + T.total, 0);
   const hb = $("#homeBubble"); hb.textContent = "";
   hb.append(total === 0 ? `Hallo${kidName()}! Ich bin ${S.buddyName}.` : `Schön, dass du da bist${kidName()}!`);
   hb.append(el("small",null,"Wohin gehen wir heute?"));
@@ -617,7 +653,7 @@ function renderTask(state){
       g.append(el("span", null, sign));
       String(num).padStart(3," ").split("").forEach(c => g.append(el("span", cls || null, c.trim())));
     };
-    row("", t.a); row("−", t.b);
+    row("", t.a); row(t.op, t.b);
     g.append(el("span","rule"));
     const ans = shown ? shown.padStart(3," ") : "  ?";
     g.append(el("span"));
