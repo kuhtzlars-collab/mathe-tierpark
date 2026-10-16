@@ -1,6 +1,6 @@
 # Mathe-Tierpark 🐾
 
-Ein Mathe-Lernspiel für die 4. Klasse, gemacht fürs Tablet. Kinder rechnen kurze Runden mit 8 Aufgaben, sammeln Sterne und adoptieren damit Tiere für ihren eigenen Tierpark.
+Ein Mathe-Lernspiel für die 4. Klasse, gemacht fürs Tablet. Kinder rechnen kurze Runden mit 8 Aufgaben, sammeln Sterne und adoptieren damit 17 Tiere für ihren eigenen Tierpark, vom Hasen über den Wolf bis zum Einhorn.
 
 **Spielen:** https://kuhtzlars-collab.github.io/mathe-tierpark/
 
