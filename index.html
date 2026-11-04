@@ -16,7 +16,7 @@
 :root{
   --bg:#E8F4EC; --surface:#FFFFFF; --surface-2:#F2F9F4; --ink:#16382A; --muted:#527565; --line:#C9E0D2;
   --sun:#FFB81C; --sun-ink:#4D3400; --leaf:#2A975A; --leaf-ink:#FFFFFF;
-  --sky:#2F86C8; --plum:#8456C4; --clay:#D9603A; --amber:#C77A00; --wood:#9A6B3F;
+  --sky:#2F86C8; --plum:#8456C4; --clay:#D9603A; --amber:#C77A00; --wood:#9A6B3F; --berry:#C2417A;
   --soft-right:#D8F2E2; --soft-wrong:#FFE6D8;
   --shadow:0 4px 0 rgba(22,56,42,.13);
   --font-display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
@@ -26,7 +26,7 @@
   :root:not([data-theme="light"]){
     --bg:#0F2119; --surface:#1A3227; --surface-2:#152B21; --ink:#E6F4EB; --muted:#9BBCAB; --line:#2B4A3B;
     --sun:#FFC845; --sun-ink:#3A2700; --leaf:#3BB870; --leaf-ink:#05170D;
-    --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F; --amber:#F2B03A; --wood:#C08A5A;
+    --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F; --amber:#F2B03A; --wood:#C08A5A; --berry:#F07AAE;
     --soft-right:#1C4530; --soft-wrong:#4A2B1D; --shadow:0 4px 0 rgba(0,0,0,.35);
     color-scheme:dark;
   }
@@ -34,7 +34,7 @@
 :root[data-theme="dark"]{
   --bg:#0F2119; --surface:#1A3227; --surface-2:#152B21; --ink:#E6F4EB; --muted:#9BBCAB; --line:#2B4A3B;
   --sun:#FFC845; --sun-ink:#3A2700; --leaf:#3BB870; --leaf-ink:#05170D;
-  --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F; --amber:#F2B03A; --wood:#C08A5A;
+  --sky:#5BAAE6; --plum:#A782E0; --clay:#F0835F; --amber:#F2B03A; --wood:#C08A5A; --berry:#F07AAE;
   --soft-right:#1C4530; --soft-wrong:#4A2B1D; --shadow:0 4px 0 rgba(0,0,0,.35);
   color-scheme:dark;
 }
@@ -204,6 +204,39 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
 
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:20;width:100%;height:100%}
 
+/* Fach-Umschalter und Englisch-Vokabeln */
+.area-en{--area:var(--berry)}
+.area-new{--area:var(--muted);border-style:dashed}
+.subjects{display:flex;gap:6px;align-self:flex-start;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:5px;box-shadow:var(--shadow)}
+.subjects button{min-height:48px;padding:0 20px;border-radius:13px;font-family:var(--font-display);font-weight:800;font-size:1.15rem;color:var(--muted)}
+.subjects button[aria-selected="true"]{background:var(--leaf);color:var(--leaf-ink)}
+.vq{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;max-width:100%}
+.vlabel{font-weight:800;color:var(--muted)}
+.vword{font-family:var(--font-display);font-weight:800;font-size:clamp(2.2rem,8vw,3.6rem);line-height:1.1;overflow-wrap:anywhere}
+.vans{font-family:var(--font-display);font-weight:800;font-size:clamp(1.5rem,5vw,2.2rem);padding:2px 16px;border-radius:12px;overflow-wrap:anywhere}
+.vans.ans-right{background:var(--soft-right);color:var(--leaf)}
+.vans.ans-reveal{color:var(--clay)}
+.keypad.vpad{grid-template-columns:1fr 1fr}
+@media (max-width:480px){.keypad.vpad{grid-template-columns:1fr}}
+.opt{min-height:72px;border-radius:20px;background:var(--surface);border:2px solid var(--line);box-shadow:var(--shadow);font-family:var(--font-display);font-weight:700;font-size:1.3rem;padding:6px 12px;line-height:1.15;overflow-wrap:anywhere}
+.opt:active{transform:translateY(3px);box-shadow:none}
+.opt.no{background:var(--soft-wrong);color:var(--clay);border-color:var(--clay);box-shadow:none;cursor:default}
+.vform{grid-column:1/-1;display:flex;flex-direction:column;gap:10px}
+.vinput{font:inherit;font-family:var(--font-display);font-weight:700;font-size:1.8rem;padding:12px 16px;border-radius:18px;border:3px solid var(--area);background:var(--surface);color:var(--ink);width:100%;min-width:0}
+.vinput.shake{animation:shake .4s}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.importsrc{display:flex;flex-wrap:wrap;gap:12px}
+.ocrstatus{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:14px 16px;font-weight:700}
+.pastebox,.review{display:flex;flex-direction:column;gap:10px}
+.pastebox textarea{font:inherit;font-size:1.05rem;padding:12px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);min-height:180px;width:100%}
+.rowhead,.vrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;gap:8px;align-items:center}
+.rowhead{font-weight:800;color:var(--muted);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em}
+.vrows{display:flex;flex-direction:column;gap:8px}
+.vrow input{font:inherit;font-size:1.05rem;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink);min-width:0;width:100%}
+.vrow input.empty{border-color:var(--clay)}
+.vrow button{width:44px;height:44px;border-radius:12px;background:var(--surface-2);border:2px solid var(--line);font-weight:800}
+.psection{margin-top:10px}
+
 /* Einzug eines neuen Tiers: es hüpft durchs Tierpark-Tor zu seinen Freunden */
 .welcome{position:fixed;inset:0;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:16px;background:var(--bg);text-align:center}
 .scene{position:relative;width:100%;max-width:600px;height:280px;border-radius:28px;overflow:hidden;background:var(--surface-2);border:3px solid var(--line)}
@@ -259,7 +292,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
     <section id="scrSetup" class="screen" hidden>
       <div class="buddy">
         <div class="face" id="setupFace">🦊</div>
-        <div class="bubble">Hallo! Such dir ein Tier aus.<small>Es begleitet dich beim Rechnen.</small></div>
+        <div class="bubble">Hallo! Such dir ein Tier aus.<small>Es begleitet dich beim Lernen.</small></div>
       </div>
       <div class="pickgrid" id="buddyPick" role="radiogroup" aria-label="Begleiter-Tier"></div>
       <div class="fields">
@@ -280,6 +313,10 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
       <div class="buddy">
         <div class="face" id="homeFace">🦊</div>
         <div class="bubble" id="homeBubble"></div>
+      </div>
+      <div class="subjects" role="tablist" aria-label="Fach">
+        <button role="tab" id="subMath">🔢 Mathe</button>
+        <button role="tab" id="subEn">🔤 Englisch</button>
       </div>
       <div class="areas" id="areaList"></div>
       <div class="homefoot">
@@ -347,6 +384,42 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--sky);outline-of
       <div class="parkgrid" id="parkGrid"></div>
     </section>
 
+    <!-- Neue Vokabelliste -->
+    <section id="scrImport" class="screen area-en" hidden>
+      <div>
+        <h1>Neue Vokabelliste</h1>
+        <p class="muted">Fotografiere die Vokabelseite oder tippe die Wörter ein. Danach kannst du jede Zeile prüfen und verbessern.</p>
+      </div>
+      <div class="importsrc">
+        <label class="btn primary" for="photoIn">📷 Foto aufnehmen oder auswählen</label>
+        <input type="file" id="photoIn" class="visually-hidden" accept="image/*" capture="environment">
+        <button class="btn" id="pasteBtn">⌨️ Eintippen oder einfügen</button>
+      </div>
+      <div class="ocrstatus" id="ocrStatus" hidden>
+        <span id="ocrText"></span>
+        <div class="meadowbar" id="ocrBarWrap" aria-hidden="true"><i id="ocrBar"></i></div>
+      </div>
+      <div class="pastebox" id="pasteBox" hidden>
+        <label for="pasteText"><b>Eine Vokabel pro Zeile</b>, zum Beispiel „dog - Hund“</label>
+        <textarea id="pasteText" spellcheck="false" placeholder="dog - Hund&#10;cat - Katze&#10;to swim - schwimmen"></textarea>
+        <div><button class="btn" id="pasteGo">Übernehmen</button></div>
+      </div>
+      <div class="review" id="reviewBox" hidden>
+        <div class="field">
+          <label for="listName">Name der Liste</label>
+          <input id="listName" maxlength="40" autocomplete="off">
+        </div>
+        <div class="rowhead"><span>Englisch</span><span>Deutsch</span><span></span></div>
+        <div class="vrows" id="vRows"></div>
+        <div class="btnrow">
+          <button class="chip" id="addRow">+ Zeile</button>
+          <button class="chip" id="swapCols">⇄ Spalten tauschen</button>
+        </div>
+        <p class="muted" id="reviewMsg"></p>
+        <div><button class="btn primary" id="saveList">Liste speichern</button></div>
+      </div>
+    </section>
+
     <!-- Eltern -->
     <section id="scrParents" class="screen" hidden>
       <div>
@@ -409,8 +482,9 @@ function freshTopic(){ return {level:1, streak:0, miss:0, right:0, total:0, rece
 const LAYOUTS = [["auto","Automatisch (Stufe 3 untereinander)"],["row","Immer hintereinander"],["stack","Immer untereinander"]];
 const HAS_LAYOUT = ["plus","minus"];
 function defaults(){
-  return {setup:false, kid:"", buddy:"fuchs", buddyName:"Flocke", stars:0, owned:[], sound:true,
-          topics:{plus:freshTopic(), minus:freshTopic(), mal:freshTopic(), teil:freshTopic()}};
+  return {setup:false, kid:"", buddy:"fuchs", buddyName:"Flocke", stars:0, owned:[], sound:true, subject:"math",
+          topics:{plus:freshTopic(), minus:freshTopic(), mal:freshTopic(), teil:freshTopic()},
+          vlists:[], vtopics:{}, vmiss:{}};
 }
 function load(){
   const d = defaults();
@@ -421,6 +495,7 @@ function load(){
       Object.assign(d, p);
       d.topics = Object.assign(defaults().topics, p.topics || {});
       for(const k in d.topics) d.topics[k] = Object.assign(freshTopic(), d.topics[k]);
+      for(const k in d.vtopics) d.vtopics[k] = Object.assign(freshTopic(), d.vtopics[k]);
     }
   }catch(e){}
   return d;
@@ -622,13 +697,15 @@ const sndWrong = () => tone([330,262],.14,"triangle");
 const sndParty = () => tone([523,659,784,1047],.11);
 
 const canSpeak = "speechSynthesis" in window;
-function say(text){
+function say(text, lang){
   if(!canSpeak) return;
+  lang = lang || "de-DE";
   try{
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "de-DE"; u.rate = .9;
-    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.toLowerCase().startsWith("de"));
+    u.lang = lang; u.rate = .9;
+    const vs = speechSynthesis.getVoices().filter(v => v.lang && v.lang.replace("_","-").toLowerCase().startsWith(lang.slice(0,2).toLowerCase()));
+    const v = vs.find(v => v.lang.replace("_","-").toLowerCase() === lang.toLowerCase()) || vs[0];
     if(v) u.voice = v;
     speechSynthesis.speak(u);
   }catch(e){}
@@ -700,12 +777,16 @@ $("#setupGo").onclick = () => {
 
 /* ---------- Karte ---------- */
 function renderHome(){
-  const total = Object.values(S.topics).reduce((s,T) => s + T.total, 0);
+  const total = [...Object.values(S.topics), ...Object.values(S.vtopics)].reduce((s,T) => s + T.total, 0);
+  const en = S.subject === "en";
   const hb = $("#homeBubble"); hb.textContent = "";
   hb.append(total === 0 ? `Hallo${kidName()}! Ich bin ${S.buddyName}.` : `Schön, dass du da bist${kidName()}!`);
-  hb.append(el("small",null,"Wohin gehen wir heute?"));
+  hb.append(el("small",null, en ? "Welche Vokabeln üben wir heute?" : "Wohin gehen wir heute?"));
+  $("#subMath").setAttribute("aria-selected", !en);
+  $("#subEn").setAttribute("aria-selected", en);
   const list = $("#areaList"); list.innerHTML = "";
-  Object.entries(AREAS).forEach(([k,A]) => {
+  if(en) renderVocabCards(list);
+  else Object.entries(AREAS).forEach(([k,A]) => {
     const T = S.topics[k];
     const b = el("button","area area-"+k);
     const top = el("div","top");
@@ -744,13 +825,14 @@ function renderMeadow(){
 /* ---------- Runde ---------- */
 let R = null, input = "";
 function startRound(area){
-  R = {area, i:0, results:[], earned:0, seen:new Set(), ups:0, timer:null};
+  R = {kind:"math", area, i:0, results:[], earned:0, seen:new Set(), ups:0, timer:null};
   $("#scrQuiz").className = "screen area-" + area;
   $("#quizTag").textContent = `${AREAS[area].icon} ${AREAS[area].name}`;
   show("scrQuiz"); nextTask();
 }
 function nextTask(){
   if(R.i >= ROUND) return finishRound();
+  if(R.kind === "vocab") return nextVocab();
   let t, guard = 0;
   do{ t = gen(R.area, S.topics[R.area].level); } while(R.seen.has(t.text) && guard++ < 30);
   const lay = S.topics[R.area].layout;
@@ -772,6 +854,7 @@ function renderDots(){
   }
 }
 function renderTask(state){
+  if(R.kind === "vocab") return renderVocabTask(state);
   const t = R.task, v = $("#taskView"); v.innerHTML = "";
   const shown = state === "reveal" ? String(t.answer) : input;
   const stateCls = state === "right" ? "ans-right" : state === "wrong" ? "ans-wrong" : state === "reveal" ? "ans-reveal" : "";
@@ -815,10 +898,12 @@ function renderTask(state){
 }
 function renderKeypad(){
   const k = $("#keypad"); k.innerHTML = "";
+  k.className = "keypad" + (R.kind === "vocab" ? " vpad" : "");
   if(R.phase === "next"){
     const b = el("button","key ok","Weiter →"); b.style.gridColumn = "1 / -1";
     b.onclick = advance; k.append(b); return;
   }
+  if(R.kind === "vocab") return renderVocabPad();
   ["1","2","3","4","5","6","7","8","9","del","0","ok"].forEach(c => {
     const b = el("button", "key" + (c === "del" ? " del" : c === "ok" ? " ok" : ""), c === "del" ? "⌫" : c === "ok" ? "Prüfen" : c);
     if(c === "del") b.setAttribute("aria-label","Löschen");
@@ -864,8 +949,19 @@ function check(){
   const raw = R.task.stacked ? stackValue() : input;
   if(raw === null){ $("#quizBubble").textContent = "Da fehlt noch eine Ziffer in der Mitte."; return; }
   if(raw === ""){ $("#quizBubble").textContent = "Tippe zuerst deine Antwort ein."; return; }
-  const t = R.task, T = S.topics[R.area], val = parseInt(raw,10);
-  if(val === t.answer){
+  const val = parseInt(raw,10);
+  if(val === R.task.answer) return onRight();
+  onWrong(val, () => {
+    renderTask("wrong"); resetAnswer();
+    setTimeout(() => { if(R.phase === "input") renderTask("plain"); }, 450);
+  });
+}
+const curTopic = () => R.kind === "vocab" ? vtopic(R.listId) : S.topics[R.area];
+const topicName = () => R.kind === "vocab" ? vocabList(R.listId).name : AREAS[R.area].name;
+// Gemeinsame Bewertung für Mathe und Englisch
+function onRight(){
+  const T = curTopic();
+  {
     const pts = R.tries === 0 ? 2 : 1;
     S.stars += pts; R.earned += pts; T.right++; T.total++;
     R.results[R.i] = R.tries === 0 ? "first" : "second";
@@ -880,26 +976,34 @@ function check(){
     } else { T.streak = 0; sndRight(); }
     $("#quizBubble").textContent = msg;
     jump($("#quizFace")); showPlus(pts); updateStars(true);
+    if(R.kind === "vocab") vocabDone(true);
     R.phase = "next"; save();
     renderTask("right"); renderDots(); renderKeypad();
-    R.timer = setTimeout(advance, 1400);
-    return;
+    R.timer = setTimeout(advance, R.kind === "vocab" ? 1800 : 1400);
   }
+}
+function onWrong(given, retry){
+  const t = R.task, T = curTopic();
   R.tries++;
   sndWrong();
   if(R.tries === 1){
-    $("#quizBubble").textContent = pick(["Fast! Probier’s nochmal.","Knapp daneben. Schau dir den Tipp an.","Noch ein Versuch!"]);
-    renderTask("wrong"); resetAnswer();
-    setTimeout(() => { if(R.phase === "input") renderTask("plain"); }, 450);
+    $("#quizBubble").textContent = R.wrongMsg || pick(["Fast! Probier’s nochmal.","Knapp daneben. Schau dir den Tipp an.","Noch ein Versuch!"]);
+    retry();
     showHint(t.hint, "💡 Tipp");
     return;
   }
   T.total++; T.streak = 0; T.miss++;
   if(T.miss >= 2 && T.level > 1){ T.level--; T.miss = 0; }
-  T.recent.unshift({t:t.text, g:val, a:t.answer}); T.recent = T.recent.slice(0,8);
+  T.recent.unshift({t:t.recentLabel || t.text, g:given, a:t.answer, v:R.kind === "vocab"}); T.recent = T.recent.slice(0,8);
   R.results[R.i] = "miss";
-  $("#quizBubble").textContent = `Kein Problem! Das Ergebnis ist ${t.answer}. So rechnet man das:`;
-  showHint(t.steps, "So geht’s");
+  if(R.kind === "vocab"){
+    vocabDone(false);
+    $("#quizBubble").textContent = `Kein Problem! Richtig ist: ${t.answer}`;
+    showHint(t.steps, "Merk dir:");
+  } else {
+    $("#quizBubble").textContent = `Kein Problem! Das Ergebnis ist ${t.answer}. So rechnet man das:`;
+    showHint(t.steps, "So geht’s");
+  }
   R.phase = "next"; save();
   renderTask("reveal"); renderDots(); renderKeypad();
 }
@@ -913,20 +1017,326 @@ function finishRound(){
   if(perfect){ S.stars += 3; R.earned += 3; }
   save(); updateStars(true);
   $("#doneTitle").textContent = perfect ? "Perfekt! Alles beim ersten Mal richtig!" : right >= 6 ? "Super gemacht!" : "Gut geübt!";
-  $("#doneText").textContent = `${right} von ${ROUND} Aufgaben richtig.` + (perfect ? " Dafür gibt es 3 Extra-Sterne." : right < 6 ? " Jede Runde macht dich stärker." : "");
+  $("#doneText").textContent = `${right} von ${ROUND} ${R.kind === "vocab" ? "Vokabeln" : "Aufgaben"} richtig.` + (perfect ? " Dafür gibt es 3 Extra-Sterne." : right < 6 ? " Jede Runde macht dich stärker." : "");
   const rr = $("#doneRes"); rr.innerHTML = "";
   R.results.forEach(r => rr.append(el("span","res " + (r === "first" ? "ok" : r === "second" ? "half" : "no"), r === "miss" ? "·" : "✓")));
   $("#doneStars").textContent = `+${R.earned} ⭐`;
   const dl = $("#doneLevel");
-  dl.hidden = !R.ups; dl.textContent = R.ups ? `${AREAS[R.area].name}: Du bist jetzt auf Stufe ${S.topics[R.area].level}!` : "";
+  dl.hidden = !R.ups; dl.textContent = R.ups ? `${topicName()}: Du bist jetzt auf Stufe ${curTopic().level}!` : "";
   const cheapest = ANIMALS.filter(a => !S.owned.includes(a.id)).sort((a,b) => a.p - b.p)[0];
   $("#toParkBtn").textContent = cheapest && S.stars >= cheapest.p ? "Neues Tier holen!" : "Zum Tierpark";
   show("scrDone");
   if(right >= 6){ confetti(); sndParty(); }
 }
-$("#againBtn").onclick = () => startRound(R.area);
+$("#againBtn").onclick = () => R.kind === "vocab" ? startVocab(R.listId) : startRound(R.area);
 $("#toParkBtn").onclick = () => { renderPark(); show("scrPark"); };
 $("#toMapBtn").onclick = () => { renderHome(); show("scrHome"); };
+
+/* ---------- Englisch-Vokabeln (Klasse 5) ---------- */
+const VLEVELS = ["Englisch → Deutsch auswählen","Deutsch → Englisch auswählen","Deutsch → Englisch schreiben"];
+const VOCAB_UNITS = [
+  {id:"u-schule", icon:"🏫", name:"Schule", w:"school=Schule; teacher=Lehrer / Lehrerin; pupil=Schüler / Schülerin; classroom=Klassenzimmer; book=Buch; exercise book=Heft; pen=Füller / Kuli; pencil=Bleistift; ruler=Lineal; rubber / eraser=Radiergummi; schoolbag=Schultasche; board=Tafel; homework=Hausaufgaben; break=Pause; timetable=Stundenplan"},
+  {id:"u-familie", icon:"👨‍👩‍👧", name:"Familie & Freunde", w:"family=Familie; mother / mum=Mutter; father / dad=Vater; parents=Eltern; sister=Schwester; brother=Bruder; grandma / granny=Oma; grandpa=Opa; aunt=Tante; uncle=Onkel; cousin=Cousin / Cousine; friend=Freund / Freundin; twins=Zwillinge; pet=Haustier; name=Name"},
+  {id:"u-zuhause", icon:"🏠", name:"Zuhause", w:"house=Haus; flat=Wohnung; room=Zimmer; kitchen=Küche; bathroom=Badezimmer; bedroom=Schlafzimmer; living room=Wohnzimmer; garden=Garten; door=Tür; window=Fenster; table=Tisch; chair=Stuhl; bed=Bett; stairs=Treppe; cupboard=Schrank"},
+  {id:"u-freizeit", icon:"⚽", name:"Freizeit", w:"hobby=Hobby; to play=spielen; to swim=schwimmen; to read=lesen; to dance=tanzen; to ride a bike=Fahrrad fahren; football=Fußball; music=Musik; to sing=singen; to paint=malen; game=Spiel; team=Mannschaft; weekend=Wochenende; to watch TV=fernsehen; park=Park"},
+  {id:"u-essen", icon:"🍎", name:"Essen & Trinken", w:"breakfast=Frühstück; lunch=Mittagessen; dinner=Abendessen; bread=Brot; apple=Apfel; cheese=Käse; egg=Ei; milk=Milch; water=Wasser; juice=Saft; chips=Pommes frites; cake=Kuchen; vegetables=Gemüse; hungry=hungrig; thirsty=durstig"},
+  {id:"u-tiere", icon:"🐺", name:"Tiere", w:"animal=Tier; dog=Hund; cat=Katze; horse=Pferd; rabbit=Kaninchen; bird=Vogel; fish=Fisch; mouse=Maus; guinea pig=Meerschweinchen; budgie=Wellensittich; tortoise=Schildkröte; wolf=Wolf; fox=Fuchs; bear=Bär; sheep=Schaf"},
+  {id:"u-kleidung", icon:"👕", name:"Farben & Kleidung", w:"red=rot; blue=blau; green=grün; yellow=gelb; black=schwarz; white=weiß; brown=braun; T-shirt=T-Shirt; trousers=Hose; jacket=Jacke; shoes=Schuhe; dress=Kleid; skirt=Rock; jumper=Pullover; hat=Hut / Mütze"},
+  {id:"u-zeit", icon:"☀️", name:"Zeit & Wetter", w:"Monday=Montag; Tuesday=Dienstag; Wednesday=Mittwoch; Thursday=Donnerstag; Friday=Freitag; Saturday=Samstag; Sunday=Sonntag; today=heute; tomorrow=morgen; yesterday=gestern; week=Woche; year=Jahr; weather=Wetter; sunny=sonnig; rain=Regen"},
+  {id:"u-verben", icon:"🏃", name:"Wichtige Verben", w:"to be=sein; to have=haben; to go=gehen; to come=kommen; to see=sehen; to like=mögen; to write=schreiben; to listen=zuhören; to help=helfen; to eat=essen; to drink=trinken; to sleep=schlafen; to buy=kaufen; to look=schauen; to know=wissen"}
+].map(u => ({id:u.id, icon:u.icon, name:u.name,
+  words: u.w.split(";").map(p => { const [en,de] = p.split("="); return {en:en.trim(), de:de.trim()}; })}));
+
+const allLists = () => [...VOCAB_UNITS, ...S.vlists];
+const vocabList = id => allLists().find(l => l.id === id);
+const vtopic = id => S.vtopics[id] || (S.vtopics[id] = freshTopic());
+const wkey = (listId, w) => listId + ":" + w.en;
+const shuffle = arr => { const a = [...arr]; for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; };
+// Englische Eingabe tolerant vergleichen: Groß/klein, Bindestrich, Satzzeichen und „to“ bei Verben egal
+const normEn = s => s.toLowerCase().replace(/[’`´]/g,"'").replace(/-/g," ").replace(/[.!?]+$/,"").replace(/\s+/g," ").trim().replace(/^to /,"");
+const accepts = w => w.en.split("/").map(normEn).filter(Boolean);
+function lev(a, b){
+  const d = Array.from({length:a.length+1}, (_,i) => [i, ...Array(b.length).fill(0)]);
+  for(let j=1;j<=b.length;j++) d[0][j] = j;
+  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++)
+    d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+const pattern = s => s.split("").map((c,i) => i === 0 ? c : /[a-zA-Z]/.test(c) ? "_" : c === " " ? " " : c).join(" ");
+const sayEn = s => say(s.split("/")[0].trim(), "en-GB");
+
+function renderVocabCards(list){
+  allLists().forEach(L => {
+    const T = vtopic(L.id);
+    const b = el("button","area area-en");
+    const top = el("div","top");
+    const tx = el("div"); tx.append(el("h2",null,L.name), el("div","what",`${L.words.length} Vokabeln` + (L.custom ? " · eigene Liste" : " · Klasse 5")));
+    top.append(el("div","icon",L.icon || "📷"), tx);
+    const lv = el("div","level");
+    const d = el("div","ldots"); for(let i=1;i<=3;i++) d.append(el("i", i <= T.level ? "on" : ""));
+    lv.append(d, el("span",null,`Stufe ${T.level}`), el("span","lname",VLEVELS[T.level-1]));
+    b.append(top, lv);
+    b.onclick = () => startVocab(L.id);
+    list.append(b);
+  });
+  const n = el("button","area area-new");
+  const top = el("div","top");
+  const tx = el("div"); tx.append(el("h2",null,"Neue Liste"), el("div","what","Vokabelseite fotografieren oder eintippen"));
+  top.append(el("div","icon","📷"), tx);
+  n.append(top);
+  n.onclick = openImport;
+  list.append(n);
+}
+
+function startVocab(id){
+  const L = vocabList(id); if(!L) return;
+  R = {kind:"vocab", listId:id, area:"en", i:0, results:[], earned:0, seen:new Set(), ups:0, timer:null};
+  $("#scrQuiz").className = "screen area-en";
+  $("#quizTag").textContent = `${L.icon || "📷"} ${L.name}`;
+  show("scrQuiz"); nextTask();
+}
+// Wörter, die oft falsch waren, kommen häufiger dran
+function pickWord(L){
+  const pool = L.words.filter(w => !R.seen.has(w.en));
+  const from = pool.length ? pool : L.words;
+  const weights = from.map(w => 1 + 2*(S.vmiss[wkey(L.id,w)] || 0));
+  let r = Math.random() * weights.reduce((a,b) => a+b, 0);
+  for(let i=0;i<from.length;i++){ r -= weights[i]; if(r <= 0) return from[i]; }
+  return from[from.length-1];
+}
+function nextVocab(){
+  const L = vocabList(R.listId), T = vtopic(R.listId);
+  const w = pickWord(L);
+  const lvl = (T.level > 1 && Math.random() < .25) ? T.level-1 : T.level;
+  const toDe = lvl === 1, typed = lvl === 3;
+  const answer = toDe ? w.de : w.en;
+  const first = answer.split("/")[0].trim();
+  const t = {kind:"vocab", w, text:w.en, dir: toDe ? "en-de" : "de-en", mode: typed ? "type" : "mc",
+    prompt: toDe ? w.en : w.de, answer, recentLabel: toDe ? w.en : w.de,
+    label: toDe ? "Was heißt das auf Deutsch?" : typed ? "Schreib das Wort auf Englisch:" : "Was heißt das auf Englisch?",
+    hint: typed ? [`Es fängt mit „${first[0]}“ an.`, pattern(first)]
+                : [`Es fängt mit „${first[0]}“ an.`, toDe ? "Lies das englische Wort laut. Klingt es wie ein deutsches Wort?" : "Lies alle Wörter laut und überlege."],
+    steps: [`${w.en} = ${w.de}`]};
+  if(!typed){
+    const key = toDe ? "de" : "en";
+    let others = [...new Set(shuffle(L.words).map(x => x[key]).filter(x => x !== answer))];
+    if(others.length < 3){
+      const extra = shuffle(VOCAB_UNITS.flatMap(u => u.words)).map(x => x[key]).filter(x => x !== answer && !others.includes(x));
+      others = others.concat([...new Set(extra)]);
+    }
+    t.options = shuffle([answer, ...others.slice(0,3)]);
+  }
+  R.seen.add(w.en); R.task = t; R.tries = 0; R.phase = "input"; R.wrongOpts = new Set(); R.wrongMsg = "";
+  $("#quizBubble").textContent = R.i === 0 ? `Los geht’s${kidName()}!` : pick(["Weißt du es?","Du schaffst das!","Denk in Ruhe nach.","Ich bin gespannt!","Weiter so!"]);
+  $("#hintBox").hidden = true;
+  renderDots(); renderTask("plain"); renderKeypad();
+}
+function renderVocabTask(state){
+  const t = R.task, v = $("#taskView"); v.innerHTML = "";
+  const box = el("div","vq");
+  box.append(el("div","vlabel",t.label));
+  const word = el("div","vword",t.prompt); word.lang = t.dir === "en-de" ? "en" : "de";
+  box.append(word);
+  if(state === "right" || state === "reveal")
+    box.append(el("div","vans " + (state === "right" ? "ans-right" : "ans-reveal"), (state === "right" ? "✓ " : "") + t.answer));
+  v.append(box);
+}
+function renderVocabPad(){
+  const k = $("#keypad"), t = R.task;
+  if(t.mode === "mc"){
+    t.options.forEach(o => {
+      const no = R.wrongOpts.has(o);
+      const b = el("button","opt" + (no ? " no" : ""), o);
+      b.lang = t.dir === "en-de" ? "de" : "en";
+      b.disabled = no;
+      b.onclick = () => chooseOpt(o);
+      k.append(b);
+    });
+    return;
+  }
+  const f = el("form","vform");
+  const inp = el("input","vinput");
+  inp.id = "vInput"; inp.lang = "en"; inp.spellcheck = false; inp.placeholder = "auf Englisch …";
+  ["autocomplete","autocapitalize","autocorrect"].forEach(a => inp.setAttribute(a,"off"));
+  inp.setAttribute("aria-label","Englisches Wort");
+  const b = el("button","key ok","Prüfen"); b.type = "submit";
+  f.append(inp, b);
+  f.onsubmit = e => { e.preventDefault(); checkTyped(inp.value); };
+  k.append(f);
+  setTimeout(() => inp.focus(), 60);
+}
+function chooseOpt(o){
+  if(!R || R.phase !== "input" || R.wrongOpts.has(o)) return;
+  if(o === R.task.answer) return onRight();
+  R.wrongOpts.add(o); R.wrongMsg = "";
+  onWrong(o, () => renderKeypad());
+}
+function checkTyped(val){
+  if(!R || R.phase !== "input") return;
+  const g = normEn(val);
+  if(!g){ $("#quizBubble").textContent = "Schreib zuerst ein Wort."; return; }
+  const ok = accepts(R.task.w);
+  if(ok.includes(g)) return onRight();
+  R.wrongMsg = ok.some(a => a.length >= 4 && lev(a,g) === 1) ? "Ganz knapp! Nur ein Buchstabe ist anders." : "";
+  onWrong(val.trim(), () => { renderKeypad(); setTimeout(() => { const i = $("#vInput"); if(i) i.classList.add("shake"); }, 70); });
+}
+// nach jeder Vokabel: Fehlerzähler pflegen und das englische Wort vorlesen
+function vocabDone(right){
+  const k = wkey(R.listId, R.task.w);
+  if(right && R.tries === 0) S.vmiss[k] = Math.max(0, (S.vmiss[k] || 0) - 1);
+  if(!right) S.vmiss[k] = (S.vmiss[k] || 0) + 1;
+  if(S.sound) sayEn(R.task.w.en);
+}
+
+/* ---------- Neue Vokabelliste: Foto oder Text ---------- */
+const TESS = "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js";
+let IMP = null;
+function openImport(){
+  IMP = null;
+  ["#ocrStatus","#pasteBox","#reviewBox"].forEach(s => $(s).hidden = true);
+  show("scrImport");
+}
+function loadScript(src){
+  return new Promise((res, rej) => {
+    if(window.Tesseract) return res();
+    const s = document.createElement("script");
+    s.src = src; s.onload = () => res(); s.onerror = () => rej(new Error("script"));
+    document.head.append(s);
+  });
+}
+function setOcr(text, frac){
+  $("#ocrStatus").hidden = false;
+  $("#ocrText").textContent = text;
+  $("#ocrBarWrap").hidden = frac == null;
+  if(frac != null) $("#ocrBar").style.width = Math.round(frac*100) + "%";
+}
+// Foto verkleinern und in Graustufen umwandeln, damit die Erkennung schneller und genauer ist
+function prepImage(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      const sc = Math.min(1, 2000 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width*sc); c.height = Math.round(img.height*sc);
+      const g = c.getContext("2d");
+      g.filter = "grayscale(1) contrast(1.3)";
+      g.drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url); res(c);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("image")); };
+    img.src = url;
+  });
+}
+const cleanCell = s => (s || "").replace(/^[\s,;:.\-–—]+|[\s,;:\-–—]+$/g,"").replace(/\s+/g," ").trim();
+// Jede Zeile in Englisch und Deutsch aufteilen (Trenner, Abstände, deutsche Artikel oder Umlaute)
+function parseVocab(text){
+  const rows = [];
+  text.split(/\r?\n/).forEach(line => {
+    let s = line.replace(/[|]/g," ").replace(/\[[^\]]*\]/g," ")
+      .replace(/\/[^\/]*[ˈˌəɪʊʌæɒɔːθðʃʒŋ][^\/]*\//g," ")
+      .replace(/^\s*(\d+[.)]?|[-•*·])\s+/,"").trim();
+    if(s.length < 3 || !/[a-zA-ZäöüÄÖÜß]/.test(s)) return;
+    const parts = s.split(/\t|\s{2,}|\s[-–—=:]\s|\s?[–—=]\s?/).map(x => x.trim()).filter(Boolean);
+    let en = "", de = "";
+    if(parts.length >= 2){ en = parts[0]; de = parts[1]; }
+    else {
+      const words = s.split(/\s+/);
+      let idx = words.findIndex((w,i) => i > 0 && /^(der|die|das|ein|eine)$/i.test(w));
+      if(idx < 0) idx = words.findIndex((w,i) => i > 0 && /[äöüßÄÖÜ]/.test(w));
+      if(idx < 0) idx = words.findIndex((w,i) => i > 0 && /^[A-ZÄÖÜ]/.test(w) && w !== "I");
+      if(idx > 0){ en = words.slice(0,idx).join(" "); de = words.slice(idx).join(" "); }
+      else en = s;
+    }
+    rows.push({en: cleanCell(en), de: cleanCell(de)});
+  });
+  return rows.slice(0, 80);
+}
+const defaultName = () => { const d = new Date(); return `Liste vom ${d.getDate()}.${d.getMonth()+1}.`; };
+function openReview(rows, name, editId){
+  IMP = {rows: rows.map(r => ({en:r.en, de:r.de})), editId: editId || null};
+  if(!IMP.rows.length) IMP.rows.push({en:"",de:""});
+  $("#listName").value = name;
+  $("#reviewBox").hidden = false;
+  renderRows();
+  $("#reviewBox").scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block:"start"});
+}
+function renderRows(){
+  const box = $("#vRows"); box.innerHTML = "";
+  IMP.rows.forEach((r,i) => {
+    const row = el("div","vrow");
+    const en = el("input"), de = el("input");
+    en.value = r.en; en.lang = "en"; en.spellcheck = false; en.placeholder = "englisch";
+    de.value = r.de; de.placeholder = "deutsch";
+    en.setAttribute("aria-label",`Zeile ${i+1}, Englisch`); de.setAttribute("aria-label",`Zeile ${i+1}, Deutsch`);
+    const mark = () => { en.classList.toggle("empty", !en.value.trim()); de.classList.toggle("empty", !de.value.trim()); };
+    en.oninput = () => { r.en = en.value; mark(); updateCount(); };
+    de.oninput = () => { r.de = de.value; mark(); updateCount(); };
+    mark();
+    const x = el("button",null,"✕");
+    x.setAttribute("aria-label",`Zeile ${i+1} löschen`);
+    x.onclick = () => { IMP.rows.splice(i,1); renderRows(); };
+    row.append(en, de, x);
+    box.append(row);
+  });
+  updateCount();
+}
+function updateCount(){
+  const n = IMP.rows.filter(r => r.en.trim() && r.de.trim()).length;
+  const gaps = IMP.rows.length - n;
+  $("#saveList").textContent = `Liste speichern (${n} Vokabeln)`;
+  $("#saveList").disabled = n < 4;
+  $("#reviewMsg").textContent = n < 4 ? "Eine Liste braucht mindestens 4 vollständige Vokabeln."
+    : gaps ? `${gaps} Zeile${gaps > 1 ? "n sind" : " ist"} unvollständig (rot) und ${gaps > 1 ? "werden" : "wird"} nicht gespeichert.` : "Alles bereit.";
+}
+$("#photoIn").onchange = async e => {
+  const f = e.target.files && e.target.files[0];
+  e.target.value = "";
+  if(!f) return;
+  $("#reviewBox").hidden = true; $("#pasteBox").hidden = true;
+  setOcr("Foto wird vorbereitet …", 0);
+  try{
+    const img = await prepImage(f);
+    await loadScript(TESS);
+    const worker = await Tesseract.createWorker(["eng","deu"], 1, {logger: m => {
+      if(m.status === "recognizing text") setOcr(`Ich lese die Vokabeln … ${Math.round(m.progress*100)} %`, m.progress);
+      else setOcr("Die Texterkennung wird geladen …", null);
+    }});
+    await worker.setParameters({tessedit_pageseg_mode:"6", preserve_interword_spaces:"1"});
+    const { data } = await worker.recognize(img);
+    await worker.terminate();
+    const rows = parseVocab(data.text);
+    if(!rows.length){ setOcr("Auf dem Foto habe ich keine Vokabeln gefunden. Versuch ein schärferes Foto bei hellem Licht oder tippe die Liste ein.", null); return; }
+    setOcr(`${rows.length} Zeilen erkannt. Bitte prüfe jede Zeile und verbessere Fehler.`, null);
+    openReview(rows, defaultName());
+  }catch(err){
+    setOcr("Das Foto konnte nicht gelesen werden. Beim ersten Mal braucht die Texterkennung Internet, um ihre Sprachdaten zu laden. Du kannst die Vokabeln auch eintippen.", null);
+  }
+};
+$("#pasteBtn").onclick = () => { $("#pasteBox").hidden = false; $("#pasteText").focus(); };
+$("#pasteGo").onclick = () => {
+  const rows = parseVocab($("#pasteText").value);
+  if(!rows.length){ setOcr("Ich habe keine Vokabeln gefunden. Schreib pro Zeile ein Wortpaar, zum Beispiel „dog - Hund“.", null); return; }
+  $("#ocrStatus").hidden = true;
+  openReview(rows, defaultName());
+};
+$("#addRow").onclick = () => { IMP.rows.push({en:"",de:""}); renderRows(); const ins = $("#vRows").querySelectorAll("input"); ins[ins.length-2].focus(); };
+$("#swapCols").onclick = () => { IMP.rows.forEach(r => { [r.en, r.de] = [r.de, r.en]; }); renderRows(); };
+$("#saveList").onclick = () => {
+  const words = IMP.rows.map(r => ({en:cleanCell(r.en), de:cleanCell(r.de)})).filter(r => r.en && r.de);
+  if(words.length < 4) return;
+  const name = $("#listName").value.trim() || defaultName();
+  if(IMP.editId){
+    const L = S.vlists.find(l => l.id === IMP.editId);
+    if(L){ L.name = name; L.words = words; }
+  } else {
+    const id = "c" + Date.now();
+    S.vlists.push({id, name, icon:"📷", custom:true, words});
+    vtopic(id);
+  }
+  S.subject = "en"; save(); renderHome(); show("scrHome");
+};
+$("#subMath").onclick = () => { S.subject = "math"; save(); renderHome(); };
+$("#subEn").onclick = () => { S.subject = "en"; save(); renderHome(); };
 
 /* ---------- Tierpark ---------- */
 let factId = null, factNote = "";
@@ -1060,6 +1470,54 @@ function renderParents(){
     }
     box.append(r);
   });
+  box.append(el("h2","psection","Englisch-Vokabeln"));
+  box.append(el("p","muted",`Stufen: 1 = ${VLEVELS[0]}, 2 = ${VLEVELS[1]}, 3 = ${VLEVELS[2]}. Wörter, die oft falsch waren, kommen häufiger dran.`));
+  allLists().forEach(L => {
+    const T = vtopic(L.id);
+    const r = el("div","prow area-en");
+    const head = el("div","head");
+    head.append(el("h3",null,`${L.icon || "📷"} ${L.name} · ${L.words.length} Vokabeln`));
+    const seg = el("div","seg");
+    VLEVELS.forEach((name,i) => {
+      const b = el("button",null,`Stufe ${i+1}`);
+      b.title = name;
+      b.setAttribute("aria-pressed", T.level === i+1);
+      b.onclick = () => { T.level = i+1; T.streak = 0; T.miss = 0; save(); renderParents(); };
+      seg.append(b);
+    });
+    head.append(seg);
+    r.append(head);
+    const pct = T.total ? Math.round(T.right/T.total*100) : 0;
+    r.append(el("p",null, T.total ? `${T.right} von ${T.total} Vokabeln richtig (${pct} %)` : "Noch nicht geübt."));
+    if(T.recent.length){
+      r.append(el("p","muted","Zuletzt nicht gewusst:"));
+      const ul = el("ul");
+      T.recent.forEach(m => ul.append(el("li",null,`${m.t} = ${m.a}  (Antwort: ${m.g})`)));
+      r.append(ul);
+    }
+    if(L.custom){
+      const acts = el("div","btnrow");
+      const ed = el("button","chip","✏️ Bearbeiten");
+      ed.onclick = () => { openImport(); openReview(L.words, L.name, L.id); };
+      const del = el("button","chip","🗑️ Löschen");
+      del.onclick = () => {
+        acts.innerHTML = "";
+        const c = el("div","confirm"); c.append(el("span",null,`Liste „${L.name}“ wirklich löschen?`));
+        const yes = el("button","btn","Ja, löschen"), no = el("button","btn primary","Abbrechen");
+        yes.onclick = () => {
+          S.vlists = S.vlists.filter(x => x.id !== L.id);
+          delete S.vtopics[L.id];
+          Object.keys(S.vmiss).forEach(k => { if(k.startsWith(L.id + ":")) delete S.vmiss[k]; });
+          save(); renderParents();
+        };
+        no.onclick = renderParents;
+        c.append(yes, no); acts.append(c);
+      };
+      acts.append(ed, del);
+      r.append(acts);
+    }
+    box.append(r);
+  });
   resetIdle();
 }
 function resetIdle(){
@@ -1067,7 +1525,7 @@ function resetIdle(){
   const b = el("button","btn","Fortschritt zurücksetzen");
   b.onclick = () => {
     a.innerHTML = "";
-    const c = el("div","confirm"); c.append(el("span",null,"Sterne, Tiere und Stufen wirklich löschen?"));
+    const c = el("div","confirm"); c.append(el("span",null,"Sterne, Tiere, Stufen und eigene Vokabellisten wirklich löschen?"));
     const yes = el("button","btn","Ja, alles löschen"), no = el("button","btn primary","Abbrechen");
     yes.onclick = () => { S = defaults(); save(); chosenBuddy = S.buddy; updateStars(); setFaces(); renderSetup(); show("scrSetup"); };
     no.onclick = resetIdle;
@@ -1081,12 +1539,23 @@ $("#homeBtn").onclick = () => { if(R) clearTimeout(R.timer); renderHome(); show(
 $("#parkBtn").onclick = () => { factId = S.buddy; renderPark(); show("scrPark"); };
 $("#parentsBtn").onclick = () => { renderParents(); show("scrParents"); };
 $("#soundBtn").onclick = () => { S.sound = !S.sound; save(); updateSound(); };
-$("#readBtn").onclick = () => say(R.task.speak);
+$("#readBtn").onclick = () => {
+  const t = R.task;
+  if(R.kind !== "vocab") return say(t.speak);
+  // Englisch nur vorlesen, wenn es die Lösung nicht verrät
+  if(t.dir === "en-de" || R.phase === "next") sayEn(t.w.en);
+  else say(t.w.de.split("/")[0].trim(), "de-DE");
+};
 $("#hintBtn").onclick = () => { if(R.phase === "input") showHint(R.task.hint, "💡 Tipp"); };
 if(!canSpeak) $("#readBtn").hidden = true;
 
 document.addEventListener("keydown", e => {
-  if($("#scrQuiz").hidden || e.target.tagName === "INPUT") return;
+  if($("#scrQuiz").hidden || e.target.tagName === "INPUT" || !R) return;
+  if(R.kind === "vocab"){
+    if(e.key === "Enter" && R.phase === "next"){ e.preventDefault(); advance(); }
+    else if(/^[1-4]$/.test(e.key) && R.task.mode === "mc") chooseOpt(R.task.options[+e.key-1]);
+    return;
+  }
   if(/^[0-9]$/.test(e.key)) press(e.key);
   else if(e.key === "Backspace") press("del");
   else if(e.key === "Enter"){ e.preventDefault(); press("ok"); }
